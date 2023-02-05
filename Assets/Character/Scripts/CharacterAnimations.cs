@@ -9,6 +9,7 @@ namespace Character.Scripts
         [SerializeField] private Transform camera;
         [SerializeField] private float rotationSpeed = 10;
         private bool _isAiming;
+        private bool _isGrounded;
         
         public void SetAiming(bool isAiming)
         {
@@ -57,6 +58,25 @@ namespace Character.Scripts
             {
                 StandardLocomotion(horizontal, vertical);
             }
+        }
+
+        public void SetIsGrounded(bool isGrounded)
+        {
+            if (!_isGrounded && isGrounded)
+            {
+                _isGrounded = true;
+                animator.SetBool("isGrounded",true);
+            }
+            else if(_isGrounded && !isGrounded)
+            {
+                _isGrounded = false;
+                animator.SetBool("isGrounded",false);
+            }
+        }
+
+        public void SetJump()
+        {
+            animator.SetTrigger("jump");
         }
     }
 }
