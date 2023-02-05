@@ -9,18 +9,13 @@ namespace Character.Scripts
         [SerializeField] private CharacterAnimations characterAnimations;
         [SerializeField] private CameraController cameraController;
         
-        private bool _isAiming;
-        
         void Update()
         {
-            bool isAiming = Input.GetMouseButton(1);
-            if (!isAiming && _isAiming)
+            if (Input.GetMouseButtonUp(1))
             {
-                _isAiming = false;
                 ChangeAiming(false);
-            }else if (isAiming && !_isAiming)
+            }else if (Input.GetMouseButtonDown(1))
             {
-                _isAiming = true;
                 ChangeAiming(true);
             }
             

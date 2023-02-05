@@ -699,6 +699,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1736948542}
+  camera: {fileID: 963194228}
+  rotationSpeed: 10
 --- !u!114 &1736948545
 MonoBehaviour:
   m_ObjectHideFlags: 0
