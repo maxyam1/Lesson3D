@@ -36,7 +36,6 @@ namespace Character.Scripts
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    rigidbody.AddForce(Vector3.up * jumpForce,ForceMode.VelocityChange);
                     characterAnimations.SetJump();
                 }
             }
@@ -60,6 +59,11 @@ namespace Character.Scripts
         {
             characterAnimations.SetAiming(isAiming);
             cameraController.isAiming = isAiming;
+        }
+
+        public void Jump()
+        {
+            rigidbody.AddForce(Vector3.up * jumpForce,ForceMode.VelocityChange);
         }
     }
 }
