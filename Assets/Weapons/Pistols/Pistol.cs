@@ -4,16 +4,19 @@ namespace Weapons.Pistols
 {
     public class Pistol : Weapon
     {
-        // Start is called before the first frame update
-        void Start()
+        protected override void Shoot()
         {
-        
+            throw new System.NotImplementedException();
         }
 
-        // Update is called once per frame
-        void Update()
+        public override void TriggerPressed()
         {
-        
+            throw new System.NotImplementedException();
+        }
+
+        public override void TriggerUnPressed()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

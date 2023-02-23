@@ -1,5 +1,4 @@
 using System;
-using Camera;
 using UnityEngine;
 
 namespace Character.Scripts
@@ -8,11 +7,12 @@ namespace Character.Scripts
     {
         public CharacterAnimations characterAnimations;
         public CharacterInventory inventory;
-        [SerializeField] private CameraController cameraController;
+        [SerializeField] private CameraController.CameraController cameraController;
         [SerializeField] private LayerMask notPlayerCapsuleCollider;
         [SerializeField] private Rigidbody rigidbody;
         [SerializeField] private float jumpForce = 1;
-        
+
+        private bool _isAiming;
 
         void Update()
         {
@@ -36,6 +36,16 @@ namespace Character.Scripts
                 float vertical = Input.GetAxis("Vertical");
             
                 characterAnimations.Locomotion(horizontal, vertical);
+
+                if (_isAiming && Input.GetMouseButtonDown(0))
+                {
+                    inventory.currentWeapon.TriggerPressed();
+                }
+
+                if (_isAiming || Input.GetMouseButtonUp(0))
+                {
+                    inventory.currentWeapon.TriggerUnPressed();
+                }
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
@@ -62,6 +72,7 @@ namespace Character.Scripts
         {
             characterAnimations.SetAiming(isAiming);
             cameraController.isAiming = isAiming;
+            _isAiming = isAiming;
         }
 
         public void Jump()
