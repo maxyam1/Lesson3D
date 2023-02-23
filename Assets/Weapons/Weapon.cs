@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Weapons
@@ -8,5 +9,6 @@ namespace Weapons
         public Vector3 rotationPivotPos;
         public Vector3 rightHandPos;
         public Vector3 rightHandRot;
+        [SerializeField] protected Transform shotPoint;
     }
 }

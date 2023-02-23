@@ -4,16 +4,10 @@ namespace Weapons.AssaultRifles
 {
     public class AssaultRifle : Weapon
     {
-        // Start is called before the first frame update
-        void Start()
+        [SerializeField] protected Transform TargetLook;//TEMP
+        protected void Update()
         {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
+            Debug.DrawLine(shotPoint.position, shotPoint.position + shotPoint.forward * 100, Color.blue);
         }
     }
 }

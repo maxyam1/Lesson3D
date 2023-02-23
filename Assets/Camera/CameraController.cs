@@ -8,6 +8,8 @@ namespace Camera
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform pivotTransform;
         [SerializeField] private Transform followTarget;
+        [SerializeField] private Transform targetLook;
+        [SerializeField] private LayerMask targetLookRayMask;
         [SerializeField] private CameraSettings cameraSettings;
 
         public bool isAiming;
@@ -17,6 +19,22 @@ namespace Camera
         {
             UpdatePosition();
             UpdateRotation(mouseX, mouseY);
+            UpdateTargetLook();
+        }
+
+        private void UpdateTargetLook()
+        {
+            RaycastHit hit;
+            Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, 200,targetLookRayMask);
+
+            float distance = 200;
+            
+            if (hit.collider != null)
+            {
+                distance = hit.distance;
+            }
+
+            targetLook.position = cameraTransform.position + cameraTransform.forward * distance;
         }
 
         private void UpdatePosition()
@@ -52,6 +70,11 @@ namespace Camera
             
             _verticalAngle = Mathf.Clamp(_verticalAngle, cameraSettings.minAngle, cameraSettings.maxAngle);
             pivotTransform.localRotation = Quaternion.Euler(_verticalAngle,0,0);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(targetLook.position, 0.2f);
         }
     }
 }
