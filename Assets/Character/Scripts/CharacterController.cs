@@ -6,11 +6,14 @@ namespace Character.Scripts
 {
     public class CharacterController : MonoBehaviour
     {
-        [SerializeField] private CharacterAnimations characterAnimations;
+        public CharacterAnimations characterAnimations;
+        public CharacterInventory inventory;
         [SerializeField] private CameraController cameraController;
         [SerializeField] private LayerMask notPlayerCapsuleCollider;
         [SerializeField] private Rigidbody rigidbody;
         [SerializeField] private float jumpForce = 1;
+        
+
         void Update()
         {
             //Прицеливание
