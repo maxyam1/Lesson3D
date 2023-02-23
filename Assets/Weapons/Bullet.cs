@@ -47,32 +47,35 @@ namespace Weapons
             spawnedEffect.Play();
             
             Destroy(spawnedEffect, 10);//удаляем эффект
-            Destroy(gameObject);//удаляем пулю
         }
 
         private void BulletHit(RaycastHit hit)
         {
-            switch (hit.collider.sharedMaterial.name)
+            if (hit.collider.sharedMaterial != null)
             {
-                case "Metal":
-                    SpawnDecal(hit, metalHitEffect);
-                    break;
-                case "Wood":
-                    SpawnDecal(hit, woodHitEffect);
-                    break;
-                case "Sand":
-                    SpawnDecal(hit, sandHitEffect);
-                    break;
-                case "Stone":
-                    SpawnDecal(hit, stoneHitEffect);
-                    break;
-                case "Meat":
-                    SpawnDecal(hit, meatHitEffect[Random.Range(0, meatHitEffect.Length - 1)]);
-                    break;
-                default:
-                    Destroy(gameObject);
-                    break;
+                switch (hit.collider.sharedMaterial.name)
+                {
+                    case "Metal":
+                        SpawnDecal(hit, metalHitEffect);
+                        break;
+                    case "Wood":
+                        SpawnDecal(hit, woodHitEffect);
+                        break;
+                    case "Sand":
+                        SpawnDecal(hit, sandHitEffect);
+                        break;
+                    case "Stone":
+                        SpawnDecal(hit, stoneHitEffect);
+                        break;
+                    case "Meat":
+                        SpawnDecal(hit, meatHitEffect[Random.Range(0, meatHitEffect.Length - 1)]);
+                        break;
+                    default:
+                        break;
+                }
             }
+
+            Destroy(gameObject);//удаляем пулю
         }
     }
 }
