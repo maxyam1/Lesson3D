@@ -20,7 +20,8 @@ namespace Character.Scripts
             if (Input.GetMouseButtonUp(1))
             {
                 ChangeAiming(false);
-            }else if (Input.GetMouseButtonDown(1))
+            }
+            if (Input.GetMouseButtonDown(1) && inventory.currentWeapon != null)
             {
                 ChangeAiming(true);
             }
@@ -37,6 +38,17 @@ namespace Character.Scripts
             
                 characterAnimations.Locomotion(horizontal, vertical);
 
+                //Смена оружия
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    inventory.ChangeWeapon(1);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    inventory.ChangeWeapon(2);
+                }
+                
+                //Стрельба
                 if (_isAiming && Input.GetMouseButtonDown(0))
                 {
                     inventory.currentWeapon.TriggerPressed();
