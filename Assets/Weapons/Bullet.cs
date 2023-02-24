@@ -1,4 +1,5 @@
 using System;
+using Character.Scripts;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -73,6 +74,12 @@ namespace Weapons
                     default:
                         break;
                 }
+            }
+
+            IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+            if (damageable != null)
+            {
+                damageable.TakeDamage(damage);
             }
 
             Destroy(gameObject);//удаляем пулю

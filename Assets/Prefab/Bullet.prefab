@@ -49,7 +49,7 @@ MonoBehaviour:
   speed: 100
   layerMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 183
   metalHitEffect: {fileID: 198000013440722320, guid: 02a509a7fa70ed740ba4197e20c5d32d, type: 3}
   sandHitEffect: {fileID: 198000010535933408, guid: a475880e7da0e9548aa05cb7933752cd, type: 3}
   stoneHitEffect: {fileID: 198000012529019072, guid: 4edabb1c0dde62743b137378c7d22980, type: 3}

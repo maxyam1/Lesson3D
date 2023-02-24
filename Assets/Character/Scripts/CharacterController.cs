@@ -4,13 +4,10 @@ using Weapons;
 
 namespace Character.Scripts
 {
-    public class CharacterController : MonoBehaviour
+    public class CharacterController : AbstractController
     {
-        public CharacterAnimations characterAnimations;
-        public CharacterInventory inventory;
         [SerializeField] private CameraController.CameraController cameraController;
         [SerializeField] private LayerMask notPlayerCapsuleCollider;
-        [SerializeField] private Rigidbody rigidbody;
         [SerializeField] private float jumpForce = 1;
 
         private bool _isAiming;
