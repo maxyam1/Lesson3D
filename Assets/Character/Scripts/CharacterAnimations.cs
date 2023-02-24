@@ -154,6 +154,17 @@ namespace Character.Scripts
             }
         }
 
+        public void PutGun()
+        {
+            animator.SetTrigger("putGun");
+        }
+
+        public void TakeGun()
+        {
+            animator.SetTrigger("takeGun");
+
+        }
+
         //IK
         
         private void OnAnimatorIK(int layerIndex)
