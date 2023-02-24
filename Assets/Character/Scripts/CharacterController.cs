@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Weapons;
 
 namespace Character.Scripts
 {
@@ -41,9 +42,13 @@ namespace Character.Scripts
                 //Смена оружия
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    inventory.ChangeWeapon(1);
+                    inventory.ChangeWeapon(0);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    inventory.ChangeWeapon(1);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
                     inventory.ChangeWeapon(2);
                 }
@@ -56,12 +61,28 @@ namespace Character.Scripts
 
                 if (_isAiming || Input.GetMouseButtonUp(0))
                 {
-                    inventory.currentWeapon.TriggerUnPressed();
+                    inventory.currentWeapon?.TriggerUnPressed();
                 }
 
+                //Прыжок
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     characterAnimations.SetJump();
+                }
+                
+                //Подбор оружия
+                if(Input.GetKeyDown(KeyCode.E))
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(cameraController.cameraTransform.position,
+                            cameraController.cameraTransform.forward, out hit, 4 ,notPlayerCapsuleCollider))
+                    {
+                        WeaponOnGround weaponOnGround = hit.collider.GetComponent<WeaponOnGround>();
+                        if (weaponOnGround)
+                        {
+                            inventory.ChangeWeapon(weaponOnGround); 
+                        }
+                    }
                 }
             }
             else

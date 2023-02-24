@@ -5,7 +5,7 @@ namespace CameraController
 {
     public class CameraController : MonoBehaviour
     {
-        [SerializeField] private Transform cameraTransform;
+        public Transform cameraTransform;
         [SerializeField] private Transform pivotTransform;
         [SerializeField] private Transform followTarget;
         [SerializeField] private Transform targetLook;

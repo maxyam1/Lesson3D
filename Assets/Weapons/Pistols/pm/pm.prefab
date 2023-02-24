@@ -87,8 +87,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5123621819582422653}
-  m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: -0.008, y: 0.179, z: 0.02}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -98,7 +98,7 @@ Transform:
   - {fileID: 479656498}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5123621819582422651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,6 +121,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8989150069279691732, guid: c870204b9822f6b45b410e3b6806f8dd, type: 3}
   bulletDamage: 20
   maxBulletsInMagazine: 8
+  weaponOnGroundPrefab: {fileID: 5743421459564789394, guid: a3eaeb259df27524083d53ac4b58cff7, type: 3}
 --- !u!1001 &5123621819738096567
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Weapons;
 
@@ -9,8 +10,7 @@ namespace Character.Scripts
         [SerializeField] private CharacterController characterController;
         [SerializeField] private Transform rightHand;
         
-        [SerializeField] private Weapon firstWeapon;
-        [SerializeField] private Weapon secondWeapon;
+        [SerializeField] private Weapon[] weaponSlots = new Weapon[3];
 
         public Weapon currentWeapon;
         private int _currentWeaponId;
@@ -20,31 +20,14 @@ namespace Character.Scripts
 
         public void ChangeWeapon(int i)
         {
-            if (_currentWeaponId == i)
+            if (_currentWeaponId == i || (currentWeapon == null && weaponSlots[i] == null))
             {
                 return;
             }
 
-            _weaponForSpawn = null;
-            if (i == 0)
-            {
-                _currentWeaponId = 0;
-            }
-            if (i == 1)
-            {
-                _weaponForSpawn = firstWeapon;
-                _currentWeaponId = 1;
-            }else if (i == 2)
-            {
-                _weaponForSpawn = secondWeapon;
-                _currentWeaponId = 2;
-            }
-
-            if (!_weaponForSpawn)
-            {
-                _currentWeaponId = 0;
-            }
-
+            _weaponForSpawn = weaponSlots[i];
+            _currentWeaponId = i;
+            
 
             if (currentWeapon != null)
             {
@@ -54,6 +37,26 @@ namespace Character.Scripts
             {
                 characterController.characterAnimations.TakeGun();
             }
+        }
+
+        public void ChangeWeapon(WeaponOnGround weaponOnGround)
+        {
+            if (_currentWeaponId == 2)
+            {
+                return;
+            }
+
+            Weapon weaponToDrop = weaponSlots[_currentWeaponId];
+            weaponSlots[_currentWeaponId] = weaponOnGround.weaponPrefab;
+            int currentID = _currentWeaponId;
+            _currentWeaponId = -1;
+            ChangeWeapon(currentID);
+            if (weaponToDrop)
+            {
+                Instantiate(weaponToDrop.weaponOnGroundPrefab, weaponOnGround.transform.position,
+                    weaponOnGround.transform.rotation);   
+            }
+            Destroy(weaponOnGround.gameObject);
         }
 
         public void WeaponPutted()

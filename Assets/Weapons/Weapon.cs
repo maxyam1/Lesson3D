@@ -16,6 +16,8 @@ namespace Weapons
         [SerializeField] protected float bulletDamage;
         [SerializeField] protected float maxBulletsInMagazine;
 
+        public WeaponOnGround weaponOnGroundPrefab; 
+
         protected abstract void Shoot();
 
         public abstract void TriggerPressed();
