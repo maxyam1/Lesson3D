@@ -453,6 +453,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: m4a1
       objectReference: {fileID: 0}
+    - target: {fileID: 7724122402588751854, guid: 04ce560e18c1e3847847d9bf24993be1, type: 3}
+      propertyPath: shootsPerMin
+      value: 800
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04ce560e18c1e3847847d9bf24993be1, type: 3}
 --- !u!1 &705507993

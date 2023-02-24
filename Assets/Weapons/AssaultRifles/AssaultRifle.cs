@@ -6,7 +6,7 @@ namespace Weapons.AssaultRifles
     public class AssaultRifle : Weapon
     {
         [SerializeField] protected float shootsPerMin;
-        
+
         protected void Update()
         {
             Debug.DrawLine(shotPoint.position, shotPoint.position + shotPoint.forward * 100, Color.blue);
@@ -15,6 +15,7 @@ namespace Weapons.AssaultRifles
         protected override void Shoot()
         {
             muzzleFlash.Play();
+            cartridgeEjectEffect.Play();
             Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation).damage = bulletDamage;
         }
 

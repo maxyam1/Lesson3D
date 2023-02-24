@@ -11,6 +11,7 @@ namespace Weapons
         public Vector3 rightHandRot;
         [SerializeField] protected Transform shotPoint;
         [SerializeField] protected ParticleSystem muzzleFlash;
+        [SerializeField] protected ParticleSystem cartridgeEjectEffect;
         [SerializeField] protected Bullet bulletPrefab;
         [SerializeField] protected float bulletDamage;
         [SerializeField] protected float maxBulletsInMagazine;

@@ -20,6 +20,7 @@ namespace Character.Scripts
         private Transform _weaponRotationPivot;
         private Transform _leftHandTarget;
         private Transform _rightHandTarget;
+        private float _leftHandWeight;
         private float _rightHandWeight;
         
         private Vector3 _leftHandTargetPos;
@@ -66,11 +67,14 @@ namespace Character.Scripts
 
             if (isAiming)
             {
+                DOTween.To(()=>_leftHandWeight, (value)=>_leftHandWeight = value, 1, 0.5f);
                 DOTween.To(()=>_rightHandWeight, (value)=>_rightHandWeight = value, 1, 0.5f);
             }
             else
             {
+                DOTween.To(()=>_leftHandWeight, (value)=>_leftHandWeight = value, 0, 0.5f);
                 DOTween.To(()=>_rightHandWeight, (value)=>_rightHandWeight = value, 0, 0.5f);
+
             }
         }
 
@@ -166,8 +170,8 @@ namespace Character.Scripts
             {
                 _weaponRotationPivot.LookAt(targetLook);
                 
-                animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
-                animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
+                animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, _leftHandWeight);
+                animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, _leftHandWeight);
                 animator.SetIKPosition(AvatarIKGoal.LeftHand, _leftHandTargetPos);
                 animator.SetIKRotation(AvatarIKGoal.LeftHand, _leftHandTargetRot);   
                 
