@@ -144,11 +144,14 @@ namespace Character.Scripts
         private void Update()
         {
             // Если делать это напрямую у рук появляется тряска и не точность
-            _leftHandTargetPos = _leftHandTarget.position;
-            _leftHandTargetRot = _leftHandTarget.rotation;
+            if (_leftHandTarget)
+            {
+                _leftHandTargetPos = _leftHandTarget.position;
+                _leftHandTargetRot = _leftHandTarget.rotation;
 
-            _rightHandTargetPos = _rightHandTarget.position;
-            _rightHandTargetRot = _rightHandTarget.rotation;
+                _rightHandTargetPos = _rightHandTarget.position;
+                _rightHandTargetRot = _rightHandTarget.rotation;
+            }
         }
 
         //IK
