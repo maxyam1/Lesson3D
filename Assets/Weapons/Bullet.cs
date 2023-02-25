@@ -25,7 +25,7 @@ namespace Weapons
             Destroy(gameObject, 10f);
         }
 
-        void Update()
+        void LateUpdate()
         {
             transform.Translate(Vector3.forward * (speed * Time.deltaTime));
 

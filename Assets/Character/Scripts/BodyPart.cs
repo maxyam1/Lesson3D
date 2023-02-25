@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Character.Scripts
 {
@@ -9,15 +10,15 @@ namespace Character.Scripts
 
     public class BodyPart : MonoBehaviour, IDamageable
     {
-        [SerializeField] private AbstractController controller;
+        [FormerlySerializedAs("controller")] [SerializeField] private AbstractCharacterController characterController;
         [SerializeField] private float damageFactor = 1;
 
 
         public void TakeDamage(float damage)
         {
-            if (controller != null)
+            if (characterController != null)
             {
-                controller.TakeDamage(damage * damageFactor);   
+                characterController.TakeDamage(damage * damageFactor);   
             }
         }
     }

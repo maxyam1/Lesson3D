@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Weapons;
 
 namespace Character.Scripts
 {
     public class CharacterInventory : MonoBehaviour
     {
-        [SerializeField] private CharacterController characterController;
+        [FormerlySerializedAs("characterController")] [SerializeField] private AbstractCharacterController characterCharacterController;
         [SerializeField] private Transform rightHand;
         
         [SerializeField] private Weapon[] weaponSlots = new Weapon[3];
@@ -31,11 +32,11 @@ namespace Character.Scripts
 
             if (currentWeapon != null)
             {
-                characterController.characterAnimations.PutGun();
+                characterCharacterController.playerAnimations.PutGun();
             }
             else if(_weaponForSpawn)
             {
-                characterController.characterAnimations.TakeGun();
+                characterCharacterController.playerAnimations.TakeGun();
             }
         }
 
@@ -64,7 +65,7 @@ namespace Character.Scripts
             Destroy(currentWeapon.gameObject);
             if (_weaponForSpawn)
             {
-                characterController.characterAnimations.TakeGun();
+                characterCharacterController.playerAnimations.TakeGun();
             }
         }
         
@@ -75,7 +76,7 @@ namespace Character.Scripts
                 currentWeapon = Instantiate(_weaponForSpawn, rightHand);
                 currentWeapon.transform.localRotation = Quaternion.identity;
                 currentWeapon.transform.localPosition = Vector3.zero;
-                characterController.characterAnimations.WeaponChanged(currentWeapon);   
+                characterCharacterController.playerAnimations.WeaponChanged(currentWeapon);   
                 _weaponForSpawn = null;
             }
         }

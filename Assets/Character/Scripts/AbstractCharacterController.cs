@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Character.Scripts
 {
-    public abstract class AbstractController : MonoBehaviour
+    public abstract class AbstractCharacterController : MonoBehaviour
     {
         public CharacterInventory inventory;
-        public CharacterAnimations characterAnimations;
+        public AbstractCharacterAnimations playerAnimations;
         [SerializeField] protected float _hp = 100;
         [SerializeField] protected Rigidbody rigidbody;
         [SerializeField] protected List<Rigidbody> ragdollRigidbodies = new List<Rigidbody>();

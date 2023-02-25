@@ -19,6 +19,10 @@ namespace CameraController
         {
             UpdatePosition();
             UpdateRotation(mouseX, mouseY);
+        }
+
+        private void LateUpdate()
+        {
             UpdateTargetLook();
         }
 
@@ -35,6 +39,8 @@ namespace CameraController
             }
 
             targetLook.position = cameraTransform.position + cameraTransform.forward * distance;
+            
+            Debug.DrawLine(cameraTransform.position, targetLook.position, Color.black);
         }
 
         private void UpdatePosition()
