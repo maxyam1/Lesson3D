@@ -34,7 +34,7 @@ namespace Character.Scripts
                 float horizontal = Input.GetAxis("Horizontal");
                 float vertical = Input.GetAxis("Vertical");
             
-                playerAnimations.Locomotion(horizontal, vertical);
+                characterAnimations.Locomotion(horizontal, vertical);
 
                 //Смена оружия
                 if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -64,7 +64,7 @@ namespace Character.Scripts
                 //Прыжок
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    playerAnimations.SetJump();
+                    characterAnimations.SetJump();
                 }
                 
                 //Подбор оружия
@@ -87,7 +87,7 @@ namespace Character.Scripts
                 Debug.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.down * 0.2f, Color.blue);//Снова рисуем луч, только другого цвета, он никуда не попал
             }
             
-            playerAnimations.SetIsGrounded(isGrounded);
+            characterAnimations.SetIsGrounded(isGrounded);
         }
 
         private void LateUpdate()
@@ -100,7 +100,7 @@ namespace Character.Scripts
 
         private void ChangeAiming(bool isAiming)
         {
-            playerAnimations.SetAiming(isAiming);
+            characterAnimations.SetAiming(isAiming);
             cameraController.isAiming = isAiming;
             _isAiming = isAiming;
         }

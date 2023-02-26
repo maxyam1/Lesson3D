@@ -1,4 +1,5 @@
 using System;
+using Character.Scripts;
 using UnityEngine;
 
 namespace Weapons
@@ -15,13 +16,35 @@ namespace Weapons
         [SerializeField] protected Bullet bulletPrefab;
         [SerializeField] protected float bulletDamage;
         [SerializeField] protected float maxBulletsInMagazine;
+        [SerializeField] protected float scareNpcRadius;
+        [SerializeField] protected LayerMask characterCapsuleMask;
 
-        public WeaponOnGround weaponOnGroundPrefab; 
+        public WeaponOnGround weaponOnGroundPrefab;
 
-        protected abstract void Shoot();
+        protected virtual void Shoot()
+        {
+            muzzleFlash.Play();
+            cartridgeEjectEffect.Play();
+            Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation).damage = bulletDamage;
+            ScareNpcByShot();
+        }
 
         public abstract void TriggerPressed();
 
         public abstract void TriggerUnPressed();
+
+        protected void ScareNpcByShot()
+        {
+            Collider[] objects = Physics.OverlapSphere(transform.position, scareNpcRadius, characterCapsuleMask);
+
+            foreach (var obj in objects)
+            {
+                IScareableByShot scareableByShot = obj.GetComponent<IScareableByShot>();
+                if (scareableByShot != null)
+                {
+                    scareableByShot.Scare(transform.position);
+                }
+            }
+        }
     }
 }

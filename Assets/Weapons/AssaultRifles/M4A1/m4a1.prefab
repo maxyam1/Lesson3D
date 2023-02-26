@@ -1429,6 +1429,10 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8989150069279691732, guid: c870204b9822f6b45b410e3b6806f8dd, type: 3}
   bulletDamage: 25
   maxBulletsInMagazine: 30
+  scareNpcRadius: 100
+  characterCapsuleMask:
+    serializedVersion: 2
+    m_Bits: 64
   weaponOnGroundPrefab: {fileID: 3480352489193035331, guid: f74440a866fc3c140962a3007dda6c89, type: 3}
   shootsPerMin: 800
 --- !u!1 &6164553290374013092

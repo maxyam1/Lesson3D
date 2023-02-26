@@ -32,11 +32,11 @@ namespace Character.Scripts
 
             if (currentWeapon != null)
             {
-                characterCharacterController.playerAnimations.PutGun();
+                characterCharacterController.characterAnimations.PutGun();
             }
             else if(_weaponForSpawn)
             {
-                characterCharacterController.playerAnimations.TakeGun();
+                characterCharacterController.characterAnimations.TakeGun();
             }
         }
 
@@ -65,7 +65,7 @@ namespace Character.Scripts
             Destroy(currentWeapon.gameObject);
             if (_weaponForSpawn)
             {
-                characterCharacterController.playerAnimations.TakeGun();
+                characterCharacterController.characterAnimations.TakeGun();
             }
         }
         
@@ -76,7 +76,7 @@ namespace Character.Scripts
                 currentWeapon = Instantiate(_weaponForSpawn, rightHand);
                 currentWeapon.transform.localRotation = Quaternion.identity;
                 currentWeapon.transform.localPosition = Vector3.zero;
-                characterCharacterController.playerAnimations.WeaponChanged(currentWeapon);   
+                characterCharacterController.characterAnimations.WeaponChanged(currentWeapon);   
                 _weaponForSpawn = null;
             }
         }

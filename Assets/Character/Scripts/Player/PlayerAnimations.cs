@@ -20,7 +20,7 @@ namespace Character.Scripts
             Vector3 moveDirection = targetLook.forward * vertical + targetLook.right * horizontal;
             moveDirection.y = 0;//чтобы не наклоняться по вертикали
 
-            if (moveDirection == Vector3.zero)//Если ни куда не идем, то смотрим куда смотрели
+            if (moveDirection == Vector3.zero)//Если никуда не идем, то смотрим куда смотрели
             {
                 moveDirection = transform.forward;
             }

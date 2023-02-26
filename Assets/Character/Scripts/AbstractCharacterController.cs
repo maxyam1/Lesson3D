@@ -7,7 +7,7 @@ namespace Character.Scripts
     public abstract class AbstractCharacterController : MonoBehaviour
     {
         public CharacterInventory inventory;
-        public AbstractCharacterAnimations playerAnimations;
+        public AbstractCharacterAnimations characterAnimations;
         [SerializeField] protected float _hp = 100;
         [SerializeField] protected Rigidbody rigidbody;
         [SerializeField] protected List<Rigidbody> ragdollRigidbodies = new List<Rigidbody>();

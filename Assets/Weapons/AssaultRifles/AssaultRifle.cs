@@ -14,9 +14,7 @@ namespace Weapons.AssaultRifles
 
         protected override void Shoot()
         {
-            muzzleFlash.Play();
-            cartridgeEjectEffect.Play();
-            Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation).damage = bulletDamage;
+            base.Shoot();
         }
 
         public override void TriggerPressed()
