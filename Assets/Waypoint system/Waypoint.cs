@@ -6,11 +6,8 @@ namespace Waypoint_system
 {
     public class Waypoint : MonoBehaviour
     {
-        public Waypoint prev;
-        public Waypoint next;
+        public List<Waypoint> links = new List<Waypoint>();
 
-        [FormerlySerializedAs("brunch")] public List<Waypoint> brunches = new List<Waypoint>();
-        
         [Range(0f, 5f)] public float width;
 
         public Vector3 GetPosition()
@@ -20,5 +17,7 @@ namespace Waypoint_system
 
             return Vector3.Lerp(leftBound , rightBound, Random.Range(0f,1f));
         }
+
+       
     }
 }

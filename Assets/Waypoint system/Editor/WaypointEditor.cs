@@ -9,45 +9,45 @@ namespace Waypoint_system.Editor
         [DrawGizmo(GizmoType.NonSelected | GizmoType.Selected | GizmoType.Pickable)]
         public static void OnDrawSceneGizmo(Waypoint waypoint, GizmoType gizmoType)
         {
+            Color waypointColor = Color.yellow;
+            
+            if (waypoint is Cover)
+            {
+                waypointColor = Color.green;   
+            }
+
             if ((gizmoType & GizmoType.Selected) != 0)
             {
-                Gizmos.color = Color.yellow;
+                Gizmos.color = waypointColor;
             }
             else
             {
-                Gizmos.color = Color.yellow * 0.5f;
+                Gizmos.color = waypointColor * 0.7f;
             }
             
             Gizmos.DrawSphere(waypoint.transform.position, 0.1f);
 
-            Gizmos.color = Color.white;
+            Gizmos.color = Color.black;
             Gizmos.DrawLine(waypoint.transform.position + (waypoint.transform.right * waypoint.width / 2f),
                 waypoint.transform.position - (waypoint.transform.right * waypoint.width / 2f));
 
-            if (waypoint.prev != null)
-            {
-                Gizmos.color = Color.red;
-                Vector3 offset = waypoint.transform.right * waypoint.width / 2f;
-                Vector3 offsetTo = waypoint.prev.transform.right * waypoint.prev.width / 2f;
-                
-                Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.prev.transform.position + offsetTo);
-            }
             
-            if (waypoint.next != null)
+            if (waypoint.links != null)
             {
-                Gizmos.color = Color.green;
-                Vector3 offset = waypoint.transform.right * waypoint.width / -2f;
-                Vector3 offsetTo = waypoint.next.transform.right * waypoint.next.width / -2f;
-                
-                Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.next.transform.position + offsetTo);
-            }
-
-            if (waypoint.brunches != null)
-            {
-                foreach (var brunch in waypoint.brunches)
+                foreach (var link in waypoint.links)
                 {
-                    Gizmos.color = Color.blue;
-                    Gizmos.DrawLine(waypoint.transform.position, brunch.transform.position);
+                    Gizmos.color = Color.red;
+                    Vector3 offset = waypoint.transform.right * waypoint.width / 2f;
+                    Vector3 offsetTo = link.transform.right * link.width / 2f;
+                
+                    Gizmos.DrawLine(waypoint.transform.position + offset, link.transform.position + offsetTo);
+                    
+                    
+                    Gizmos.color = Color.green;
+                    offset = waypoint.transform.right * waypoint.width / -2f;
+                    offsetTo = link.transform.right * link.width / -2f;
+                
+                    Gizmos.DrawLine(waypoint.transform.position + offset, link.transform.position + offsetTo);
                 }
             }
         }

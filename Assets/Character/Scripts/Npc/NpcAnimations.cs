@@ -4,6 +4,12 @@ namespace Character.Scripts.Npc
 {
     public class NpcAnimations : AbstractCharacterAnimations
     {
+        public void ScaredHiding()
+        {
+            animator.SetFloat("vertical", 0);
+            animator.SetBool("scared", true);
+        }
+
         public void StandardLocomotion(Vector3 targetPos, float speed)
         {
             Vector3 direction = targetPos - transform.position;

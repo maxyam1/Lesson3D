@@ -1,27 +1,22 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
-using Waypoint_system;
-using Random = UnityEngine.Random;
 
 namespace Character.Scripts.Npc.StateMachine
 {
-    public class NpcWalking : StateMachineBehaviour
+    public class NpcScaredRunningToCover : StateMachineBehaviour
     {
         private NpcCharacterController _npcController;
         private NpcAnimations _npcAnimations;
         private float _walkSpeed;
         private Vector3 _currentTarget;
-        private Vector3 _prevTarget;
 
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            _walkSpeed = Random.Range(0.45f, 0.6f);
+            _walkSpeed = 1f;
             _npcController = animator.transform.parent.GetComponent<NpcCharacterController>();
             _npcController.ChangeAiming(false);
-            _currentTarget = _npcController.currentWaypoint.GetPosition();
             _npcAnimations = _npcController.characterAnimations as NpcAnimations;
+            GetNewTarget();
         }
 
         //OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -41,34 +36,14 @@ namespace Character.Scripts.Npc.StateMachine
 
         private void GetNewTarget()
         {
-            Vector3 currentDirection = _currentTarget - _prevTarget;
-            List<(float chance, Waypoint waypoint)> list = new List<(float chance, Waypoint waypoint)>();
-
-            float totalChance = 0;
-            
-            foreach (var link in _npcController.currentWaypoint.links)
+            if (_npcController.currentRoute.Count == 0)
             {
-                float chance = 180 - Vector3.Angle(currentDirection, link.transform.position - _currentTarget);
-                totalChance += chance;
-                list.Add((totalChance, link));
+                _npcController.OnCoverArrived();
+                return;
             }
 
-            float randomResult = Random.Range(0, totalChance);
-
-            Waypoint next = list[list.Count - 1].waypoint;
-            
-            for (int i = 0; i < list.Count - 1; i++)
-            {
-                if (randomResult < list[i].chance)
-                {
-                    next = list[i].waypoint;
-                    break;
-                }
-            }
-
-            _prevTarget = _currentTarget;
-            _npcController.currentWaypoint = next;
-            _currentTarget = _npcController.currentWaypoint.GetPosition();
+            _currentTarget = _npcController.currentRoute[_npcController.currentRoute.Count - 1].GetPosition();
+            _npcController.currentRoute.RemoveAt(_npcController.currentRoute.Count - 1);
         }
 
         //OnStateExit is called when a transition ends and the state machine finishes evaluating this state
