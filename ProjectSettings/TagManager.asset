@@ -15,7 +15,7 @@ TagManager:
   - CharacterCapsuleCollider
   - Ragdoll
   - PlayerRagdoll
-  - 
+  - NotCollidingCharacterCapsule
   - 
   - 
   - 

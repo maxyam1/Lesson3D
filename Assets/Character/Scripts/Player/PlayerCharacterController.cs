@@ -64,7 +64,7 @@ namespace Character.Scripts
                 //Перезарядка
                 if (Input.GetKeyDown(KeyCode.R))
                 {
-                    inventory.currentWeapon?.Reload();
+                    characterAnimations.Reload();
                 }
 
                 //Прыжок

@@ -9,12 +9,21 @@ namespace Character.Scripts
 {
     public class PlayerAnimations : AbstractCharacterAnimations
     {
+        protected int id_vertical;
+        protected int id_horizontal;
+        
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            id_vertical = Animator.StringToHash("vertical");
+            id_horizontal = Animator.StringToHash("horizontal");
+        }
 
         protected override void StandardLocomotion(float horizontal, float vertical)
         {
             //Передвижение
             float moveAmount = Mathf.Clamp01(new Vector2(horizontal, vertical).magnitude);
-            animator.SetFloat("vertical", moveAmount);
+            animator.SetFloat(id_vertical, moveAmount);
             
             //Вращение
             Vector3 moveDirection = targetLook.forward * vertical + targetLook.right * horizontal;
@@ -31,8 +40,8 @@ namespace Character.Scripts
         protected override void AimingLocomotion(float horizontal, float vertical)
         {
             //Передвижение
-            animator.SetFloat("horizontal", horizontal);
-            animator.SetFloat("vertical", vertical);
+            animator.SetFloat(id_horizontal, horizontal);
+            animator.SetFloat(id_vertical, vertical);
             
             //Вращение
             Vector3 moveDirection = targetLook.forward;

@@ -30,7 +30,7 @@ Transform:
   m_Children:
   - {fileID: 4000011204400734}
   m_Father: {fileID: 5906582386820501606}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &321668432748428531
 GameObject:
@@ -632,6 +632,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.00017483514, y: 0.0013899304, z: 0.000046012323}
     m_Extent: {x: 0.000033808188, y: 0.0005389963, z: 0.00013073914}
   m_DirtyAABB: 0
+--- !u!1 &2853243823102876364
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1581076451510459957}
+  m_Layer: 0
+  m_Name: left hand target mag
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1581076451510459957
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2853243823102876364}
+  m_LocalRotation: {x: -0.7001265, y: -0.71369874, z: 0.015261368, w: -0.014971147}
+  m_LocalPosition: {x: 0.126, y: 0.2729, z: 0.1478}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5906582386820501606}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: -182.45, y: 0, z: -91.1}
 --- !u!1 &2904070129879438497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1403,6 +1434,7 @@ Transform:
   m_Children:
   - {fileID: 2869322794158173682}
   - {fileID: 3232115786344871049}
+  - {fileID: 1581076451510459957}
   - {fileID: 863440207}
   - {fileID: 5125274773356055965}
   m_Father: {fileID: 0}
@@ -1429,13 +1461,16 @@ MonoBehaviour:
   cartridgeEjectEffect: {fileID: 5013060850550133601}
   bulletPrefab: {fileID: 8989150069279691732, guid: c870204b9822f6b45b410e3b6806f8dd, type: 3}
   bulletDamage: 25
-  maxBulletsInMagazine: 30
   scareNpcRadius: 100
   characterCapsuleMask:
     serializedVersion: 2
     m_Bits: 64
   audioSource: {fileID: 936195373658069685}
   shotSound: {fileID: 8300000, guid: ebe77ba58a9a10247b97da0aa4beaa6b, type: 3}
+  magPrefab: {fileID: 6094657561646274783, guid: e58a7ed04ec4ec349880cdd9e314655b, type: 3}
+  magOnWeapon: {fileID: 3412996754313750403}
+  magHandTarget: {fileID: 1581076451510459957}
+  maxBulletsInMagazine: 30
   weaponOnGroundPrefab: {fileID: 3480352489193035331, guid: f74440a866fc3c140962a3007dda6c89, type: 3}
   barrel: {fileID: 3608423790431193338}
   shootsPerMin: 800
@@ -2363,7 +2398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011175361746, guid: 7ca96822084510147adb2aea03d45e3b, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4000011175361746, guid: 7ca96822084510147adb2aea03d45e3b, type: 3}
       propertyPath: m_LocalPosition.x

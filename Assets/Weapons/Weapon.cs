@@ -20,6 +20,11 @@ namespace Weapons
         [SerializeField] protected LayerMask characterCapsuleMask;
         [SerializeField] protected AudioSource audioSource;
         [SerializeField] protected AudioClip shotSound;
+
+        public GameObject magPrefab;
+        public GameObject magOnWeapon;
+        public Transform magHandTarget;
+        protected bool isReloading;
         
         [SerializeField] protected int maxBulletsInMagazine;
         protected int currentBulletsCountInMagazine;
@@ -36,14 +41,14 @@ namespace Weapons
             currentBulletsCountInMagazine = maxBulletsInMagazine;
         }
 
-        public virtual void Reload()
+        public void StartReload()
         {
-            currentBulletsCountInMagazine = maxBulletsInMagazine;
+            isReloading = true;
         }
 
         protected virtual bool Shoot()
         {
-            if(currentBulletsCountInMagazine <= 0)
+            if(currentBulletsCountInMagazine <= 0 && !isReloading)
                 return false;
 
             muzzleFlash.Play();
@@ -72,6 +77,16 @@ namespace Weapons
                     scareableByShot.Scare(transform.position);
                 }
             }
+        }
+
+        public void BoltPulled()
+        {
+            currentBulletsCountInMagazine = maxBulletsInMagazine;
+        }
+
+        public void ReloadFinished()
+        {
+            isReloading = false;
         }
     }
 }

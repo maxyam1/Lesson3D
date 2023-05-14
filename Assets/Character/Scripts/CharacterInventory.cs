@@ -8,6 +8,8 @@ namespace Character.Scripts
 {
     public class CharacterInventory : MonoBehaviour
     {
+        public event Action<Weapon> OnCurrentWeaponChanged; 
+        
         [FormerlySerializedAs("characterController")] [SerializeField] private AbstractCharacterController characterCharacterController;
         [SerializeField] private Transform rightHand;
         
@@ -76,7 +78,8 @@ namespace Character.Scripts
                 currentWeapon = Instantiate(_weaponForSpawn, rightHand);
                 currentWeapon.transform.localRotation = Quaternion.identity;
                 currentWeapon.transform.localPosition = Vector3.zero;
-                characterCharacterController.characterAnimations.WeaponChanged(currentWeapon);   
+                //characterCharacterController.characterAnimations.WeaponChanged(currentWeapon);
+                OnCurrentWeaponChanged?.Invoke(currentWeapon);
                 _weaponForSpawn = null;
             }
         }

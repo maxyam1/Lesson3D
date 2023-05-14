@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -12,6 +13,8 @@ namespace Character.Scripts
         [SerializeField] protected float rotationSpeed = 10;
         [SerializeField] protected Transform targetLook;
         
+        protected Transform leftHand;
+        
         protected bool isAiming;
         protected bool isGrounded;
 
@@ -25,9 +28,39 @@ namespace Character.Scripts
         protected Quaternion leftHandTargetRot;
         protected Vector3 rightHandTargetPos;
         protected Quaternion rightHandTargetRot;
+        protected Weapon currentWeapon;
+
+
+        protected int id_isAiming;
+        protected int id_isGrounded;
+        protected int id_putGun;
+        protected int id_takeGun;
+        protected int id_reload;
+        protected int id_jump;
+        
+
+        protected virtual void OnEnable()
+        {
+            characterController.inventory.OnCurrentWeaponChanged += OnWeaponChanged;
+            currentWeapon = characterController.inventory.currentWeapon;
+            
+            id_isAiming = Animator.StringToHash("isAiming");
+            id_isGrounded = Animator.StringToHash("isGrounded");
+            id_putGun = Animator.StringToHash("putGun");
+            id_takeGun = Animator.StringToHash("takeGun");
+            id_reload = Animator.StringToHash("reload");
+            id_jump = Animator.StringToHash("jump");
+        }
+
+        protected virtual void OnDisable()
+        {
+            characterController.inventory.OnCurrentWeaponChanged -= OnWeaponChanged;
+        }
 
         private void Awake()
         {
+            leftHand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
+            
             if (weaponRotationPivot == null)
             {
                 weaponRotationPivot = new GameObject().transform;
@@ -43,8 +76,10 @@ namespace Character.Scripts
             }
         }
 
-        public void WeaponChanged(Weapon currentWeapon)
+        private void OnWeaponChanged(Weapon currentWeapon)
         {
+            this.currentWeapon = currentWeapon;
+            
             if (currentWeapon == null)
             {
                 leftHandTarget = null;
@@ -58,21 +93,43 @@ namespace Character.Scripts
             }
         }
 
+        private void SetLeftHandWeight(float weight, float duration)
+        {
+            DOTween.To(()=>leftHandWeight, (value)=>leftHandWeight = value, weight, duration);
+        }
+        
+        private void SetLeftHandWeight(float weight, float duration, Action onComplete)
+        {
+            DOTween.To(()=>leftHandWeight, (value)=>leftHandWeight = value, weight, duration).OnComplete(() => onComplete?.Invoke());
+        }
+        
+        private void SetRightHandWeight(float weight, float duration)
+        {
+            DOTween.To(()=>rightHandWeight, (value)=>rightHandWeight = value, weight, duration);
+        }
+        
+        private void SetRightHandWeight(float weight, float duration, Action onComplete)
+        {
+            DOTween.To(()=>rightHandWeight, (value)=>rightHandWeight = value, weight, duration).OnComplete(() => onComplete?.Invoke());
+        }
+        
         public void SetAiming(bool isAiming)
         {
             this.isAiming = isAiming;
-            animator.SetBool("isAiming", isAiming);
+            animator.SetBool(id_isAiming, isAiming);
 
+            if(isReloading)
+                return;
+                
             if (isAiming)
             {
-                DOTween.To(()=>leftHandWeight, (value)=>leftHandWeight = value, 1, 0.5f);
-                DOTween.To(()=>rightHandWeight, (value)=>rightHandWeight = value, 1, 0.5f);
+                SetLeftHandWeight(1, 0.5f);
+                SetRightHandWeight(1, 0.5f);
             }
             else
             {
-                DOTween.To(()=>leftHandWeight, (value)=>leftHandWeight = value, 0, 0.5f);
-                DOTween.To(()=>rightHandWeight, (value)=>rightHandWeight = value, 0, 0.5f);
-
+                SetLeftHandWeight(0, 0.5f);
+                SetRightHandWeight(0, 0.5f);
             }
         }
 
@@ -97,18 +154,18 @@ namespace Character.Scripts
             if (!this.isGrounded && isGrounded)
             {
                 this.isGrounded = true;
-                animator.SetBool("isGrounded",true);
+                animator.SetBool(id_isGrounded,true);
             }
             else if(this.isGrounded && !isGrounded)
             {
                 this.isGrounded = false;
-                animator.SetBool("isGrounded",false);
+                animator.SetBool(id_isGrounded,false);
             }
         }
 
         public void SetJump()
         {
-            animator.SetTrigger("jump");
+            animator.SetTrigger(id_jump);
         }
 
 
@@ -127,12 +184,12 @@ namespace Character.Scripts
 
         public void PutGun()
         {
-            animator.SetTrigger("putGun");
+            animator.SetTrigger(id_putGun);
         }
 
         public void TakeGun()
         {
-            animator.SetTrigger("takeGun");
+            animator.SetTrigger(id_takeGun);
 
         }
 
@@ -171,5 +228,78 @@ namespace Character.Scripts
                 animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTargetRot);
             }
         }
+
+        #region ===Reloading===
+
+        protected GameObject currentSpawnedMag;
+        protected bool isReloading;
+        public void Reload()
+        {
+            if(!currentWeapon)
+                return;
+
+            isReloading = true;
+            leftHandTarget = currentWeapon.magHandTarget;
+            currentWeapon.StartReload();
+            animator.SetTrigger(id_reload);
+            
+            SetLeftHandWeight(1,0.3f);
+            SetRightHandWeight(0,0.3f);
+        }
+        
+        public void GrabMag()
+        {
+            currentWeapon.magOnWeapon.SetActive(false);
+            currentSpawnedMag = Instantiate(currentWeapon.magPrefab, leftHand.position, leftHand.rotation, leftHand);
+            SetLeftHandWeight(0,0.1f);
+        }
+        
+        public void DropMag()
+        {
+            currentSpawnedMag.transform.SetParent(null);
+            currentSpawnedMag.AddComponent<Rigidbody>();
+            Destroy(currentSpawnedMag, 10f);
+            currentSpawnedMag = null;
+        }
+
+        protected GameObject newSpawnedMag;
+        public void TakeNewMag()
+        {
+            newSpawnedMag = Instantiate(currentWeapon.magPrefab, leftHand.position, leftHand.rotation, leftHand);
+            SetLeftHandWeight(1,0.3f);
+        }
+        
+        public void PutNewMag()
+        {
+            currentWeapon.magOnWeapon.SetActive(true);
+            Destroy(newSpawnedMag);
+            newSpawnedMag = null;
+            SetLeftHandWeight(0,0.2f);
+        }
+
+        public void PullBolt()
+        {
+            currentWeapon.BoltPulled();
+            leftHandTarget = currentWeapon.leftHandTarget;
+        }
+
+        public void ReloadFinished()
+        {
+            isReloading = false;
+            currentWeapon.ReloadFinished();
+            
+            if (isAiming)
+            {
+                SetLeftHandWeight(1,0.3f);
+                SetRightHandWeight(1,0.3f);
+            }
+            else
+            {
+                SetLeftHandWeight(1,0.3f, () => SetLeftHandWeight(0, 0.3f));
+            }
+            
+        }
+
+        #endregion
     }
 }
