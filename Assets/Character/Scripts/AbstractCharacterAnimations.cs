@@ -235,9 +235,6 @@ namespace Character.Scripts
         protected bool isReloading;
         public void Reload()
         {
-            if(!currentWeapon)
-                return;
-
             isReloading = true;
             leftHandTarget = currentWeapon.magHandTarget;
             currentWeapon.StartReload();

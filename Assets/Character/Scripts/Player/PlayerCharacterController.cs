@@ -64,7 +64,11 @@ namespace Character.Scripts
                 //Перезарядка
                 if (Input.GetKeyDown(KeyCode.R))
                 {
-                    characterAnimations.Reload();
+                    if (inventory.CanReload())
+                    {
+                        inventory.GetBulletsToMag();
+                        characterAnimations.Reload();   
+                    }
                 }
 
                 //Прыжок

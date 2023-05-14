@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Utils.SerializableDict;
 using Weapons;
 
 namespace Character.Scripts
@@ -14,12 +15,35 @@ namespace Character.Scripts
         [SerializeField] private Transform rightHand;
         
         [SerializeField] private Weapon[] weaponSlots = new Weapon[3];
-
+        
         public Weapon currentWeapon;
         private int _currentWeaponId;
 
         private Weapon _weaponForSpawn;
-        
+
+        [SerializeField] protected SerializableDictionary<BulletType, int> bulletCounts = new SerializableDictionary<BulletType, int>();
+
+
+        public void GetBulletsToMag()
+        {
+            BulletType bulletType = currentWeapon.BulletType;
+            int targetBullets = currentWeapon.LacksBullet;
+
+            if (!bulletCounts.ContainsKey(bulletType))
+            {
+                return;
+            }
+
+            if (bulletCounts[bulletType] >= targetBullets)
+            {
+                bulletCounts[bulletType] -= targetBullets;
+                currentWeapon.currentBulletsCountInMagazine += targetBullets;
+                return;
+            }
+
+            currentWeapon.currentBulletsCountInMagazine += bulletCounts[bulletType];
+            bulletCounts[bulletType] = 0;
+        }
 
         public void ChangeWeapon(int i)
         {
@@ -82,6 +106,17 @@ namespace Character.Scripts
                 OnCurrentWeaponChanged?.Invoke(currentWeapon);
                 _weaponForSpawn = null;
             }
+        }
+
+        public bool CanReload()
+        {
+            if (!currentWeapon)
+                return false;
+
+            if (!bulletCounts.ContainsKey(currentWeapon.BulletType))
+                return false;
+            
+            return bulletCounts[currentWeapon.BulletType] > 0 && currentWeapon.LacksBullet > 0;
         }
     }
 }

@@ -19,7 +19,11 @@ namespace Weapons.AssaultRifles
         public float _temperature = 0;
         private MaterialPropertyBlock _propertyBlock;
         private Color _barrelEmission = new Color(0,0,0);
-
+        
+        public override BulletType BulletType
+        {
+            get { return BulletType.Rifle; }
+        }
 
         protected override void Start()
         {

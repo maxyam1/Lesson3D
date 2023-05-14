@@ -27,9 +27,22 @@ namespace Weapons
         protected bool isReloading;
         
         [SerializeField] protected int maxBulletsInMagazine;
-        protected int currentBulletsCountInMagazine;
+        public int currentBulletsCountInMagazine;
 
         public WeaponOnGround weaponOnGroundPrefab;
+
+        public int LacksBullet
+        {
+            get
+            {
+                return maxBulletsInMagazine - currentBulletsCountInMagazine;
+            }
+        }
+
+        public abstract BulletType BulletType
+        {
+            get;
+        }
 
         protected virtual void Start()
         {
@@ -81,12 +94,20 @@ namespace Weapons
 
         public void BoltPulled()
         {
-            currentBulletsCountInMagazine = maxBulletsInMagazine;
+            //UpdateBulletsUi(); //TODO
         }
 
         public void ReloadFinished()
         {
             isReloading = false;
         }
+    }
+
+    public enum BulletType
+    {
+        Rifle,
+        Pistol,
+        Rpg,
+        ShotGun
     }
 }
