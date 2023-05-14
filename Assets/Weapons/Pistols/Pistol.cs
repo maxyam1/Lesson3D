@@ -10,9 +10,12 @@ namespace Weapons.Pistols
             Debug.DrawLine(shotPoint.position, shotPoint.position + shotPoint.forward * 100, Color.blue);
         }
 
-        protected override void Shoot()
+        protected override bool Shoot()
         {
-            base.Shoot();
+            if (!base.Shoot())
+                return false;
+
+            return true;
         }
 
         public override void TriggerPressed()

@@ -16,11 +16,13 @@ namespace Weapons
         [SerializeField] protected ParticleSystem cartridgeEjectEffect;
         [SerializeField] protected Bullet bulletPrefab;
         [SerializeField] protected float bulletDamage;
-        [SerializeField] protected float maxBulletsInMagazine;
         [SerializeField] protected float scareNpcRadius;
         [SerializeField] protected LayerMask characterCapsuleMask;
         [SerializeField] protected AudioSource audioSource;
         [SerializeField] protected AudioClip shotSound;
+        
+        [SerializeField] protected int maxBulletsInMagazine;
+        protected int currentBulletsCountInMagazine;
 
         public WeaponOnGround weaponOnGroundPrefab;
 
@@ -30,15 +32,28 @@ namespace Weapons
             {
                 audioSource = GetComponent<AudioSource>();
             }
+
+            currentBulletsCountInMagazine = maxBulletsInMagazine;
         }
 
-        protected virtual void Shoot()
+        public virtual void Reload()
         {
+            currentBulletsCountInMagazine = maxBulletsInMagazine;
+        }
+
+        protected virtual bool Shoot()
+        {
+            if(currentBulletsCountInMagazine <= 0)
+                return false;
+
             muzzleFlash.Play();
             cartridgeEjectEffect.Play();
             audioSource.PlayOneShot(shotSound);
             Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation).damage = bulletDamage;
             ScareNpcByShot();
+            currentBulletsCountInMagazine--;
+            
+            return true;
         }
 
         public abstract void TriggerPressed();

@@ -60,6 +60,12 @@ namespace Character.Scripts
                 {
                     inventory.currentWeapon?.TriggerUnPressed();
                 }
+                
+                //Перезарядка
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    inventory.currentWeapon?.Reload();
+                }
 
                 //Прыжок
                 if (Input.GetKeyDown(KeyCode.Space))

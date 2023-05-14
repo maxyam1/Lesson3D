@@ -53,12 +53,15 @@ namespace Weapons.AssaultRifles
             barrel.SetPropertyBlock (_propertyBlock);
         }
 
-        protected override void Shoot()
+        protected override bool Shoot()
         {
-            base.Shoot();
+            if (!base.Shoot())
+                return false;
             _isReadyForShot = false;
             _temperature += temperaturePerShot;
             StartCoroutine(ShotCooldown());
+
+            return true;
         }
 
         IEnumerator ShotCooldown()
