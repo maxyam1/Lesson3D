@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Weapons
 {
+    [RequireComponent(typeof(AudioSource))]
     public abstract class Weapon : MonoBehaviour
     {
         public Transform leftHandTarget;
@@ -18,13 +19,24 @@ namespace Weapons
         [SerializeField] protected float maxBulletsInMagazine;
         [SerializeField] protected float scareNpcRadius;
         [SerializeField] protected LayerMask characterCapsuleMask;
+        [SerializeField] protected AudioSource audioSource;
+        [SerializeField] protected AudioClip shotSound;
 
         public WeaponOnGround weaponOnGroundPrefab;
+
+        protected virtual void Start()
+        {
+            if (!audioSource)
+            {
+                audioSource = GetComponent<AudioSource>();
+            }
+        }
 
         protected virtual void Shoot()
         {
             muzzleFlash.Play();
             cartridgeEjectEffect.Play();
+            audioSource.PlayOneShot(shotSound);
             Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation).damage = bulletDamage;
             ScareNpcByShot();
         }
@@ -33,7 +45,7 @@ namespace Weapons
 
         public abstract void TriggerUnPressed();
 
-        protected void ScareNpcByShot()
+        protected void ScareNpcByShot()//Todo переделать через реестр npc
         {
             Collider[] objects = Physics.OverlapSphere(transform.position, scareNpcRadius, characterCapsuleMask);
 

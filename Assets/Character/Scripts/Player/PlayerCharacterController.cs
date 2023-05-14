@@ -56,7 +56,7 @@ namespace Character.Scripts
                     inventory.currentWeapon.TriggerPressed();
                 }
 
-                if (_isAiming || Input.GetMouseButtonUp(0))
+                if (!_isAiming || Input.GetMouseButtonUp(0))
                 {
                     inventory.currentWeapon?.TriggerUnPressed();
                 }
