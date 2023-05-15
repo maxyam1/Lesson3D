@@ -66,7 +66,7 @@ namespace Character.Scripts
             }
         }
 
-        public void ChangeWeapon(WeaponOnGround weaponOnGround)
+        public void ChangeWeapon(WeaponOnGround weaponOnGround)//todo допилить выбрасывание
         {
             if (_currentWeaponId == 2)
             {
