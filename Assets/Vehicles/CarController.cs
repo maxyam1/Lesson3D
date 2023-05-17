@@ -1,9 +1,30 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Vehicles
 {
     public class CarController : MonoBehaviour
     {
+        [SerializeField] private Transform centerOfGravity;
+        [SerializeField] private float maxEngineTorque = 100;
+        [SerializeField] private float maxEngineRpm = 6000;
+        //[SerializeField] private float engineAndFlywheelMomentum = 1;
+        //[SerializeField] private float engineBrakeTorque;
+        [SerializeField] private AnimationCurve torqueCurve;
+        //[SerializeField] private int gearCount = 5;
+        [SerializeField] private List<float> frontGearRatios = new List<float>();
+        [SerializeField] private float rearGearRatio = -30;
+        [SerializeField] private float idleRpm;
+
+        [SerializeField] private float maxBrakeTorque = 100;
+        [SerializeField] private float frontRearBrakeRatio = 1.5f;
+
+        [SerializeField] private WheelDriveType wheelDriveType;
+
+        [SerializeField] private int avgRpmInterpolationSteps = 3;
+        
         [SerializeField] protected WheelCollider wheelCollider_FL;
         [SerializeField] protected Transform wheelRenderer_FL;
         
@@ -18,13 +39,72 @@ namespace Vehicles
 
         private Vector3 tmpPos;
         private Quaternion tmpRot;
-        void Start()
+
+        [Range(-1f, 1f)] private float _steeringWheelPos;
+        [SerializeField] private float maxSteerAngle = 40;
+        
+        [Range(0f, 1f)] private float _accelerationPedalPos;
+        private bool _accelerationPedalChanged;
+        
+        [Range(0f, 1f)] private float _brakePedalPos;
+        private bool _brakePedalChanged;
+        
+        private bool parkingBrake;
+
+        private float currentEngineRpm = 1000;
+        private int _currentGear = 0;
+        private float _wheelSpeedKmh;
+
+        private Queue<float> avgRpmLastStepsValues = new Queue<float>();
+        
+        /// <summary>
+        ///| 01 if fwd |
+        ///| 10 if rwd |
+        ///| 11 if awd |
+        /// </summary>
+        private enum WheelDriveType 
         {
-        
+            FWD = 1,
+            RWD = 2,
+            AWD = 3
         }
-        
+
+
+        private void Start()
+        {
+            GetComponent<Rigidbody>().centerOfMass = centerOfGravity.localPosition;
+        }
+
         void Update()
         {
+            //TMP TEST
+            Steering(Input.GetAxis("Horizontal"));
+            float vertical = Input.GetAxis("Vertical");
+            if (vertical >= 0)
+            {
+                AccelerationPedal(vertical);
+                BrakePedal(0);
+            }
+            else
+            {
+                AccelerationPedal(0);
+                BrakePedal(-vertical);
+            }
+            
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                GearUp();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                GearDown();
+            }
+            Debug.LogErrorFormat("left rpm {0}, right rpm {1}", wheelCollider_RL.rpm, wheelCollider_RR.rpm);
+
+
+
+
             wheelCollider_FL.GetWorldPose(out tmpPos,out tmpRot);
             wheelRenderer_FL.position = tmpPos;
             wheelRenderer_FL.rotation = tmpRot;
@@ -40,6 +120,199 @@ namespace Vehicles
             wheelCollider_RR.GetWorldPose(out tmpPos,out tmpRot);
             wheelRenderer_RR.position = tmpPos;
             wheelRenderer_RR.rotation = tmpRot;
+        }
+
+        private void FixedUpdate()
+        {
+            CarControl();
+        }
+
+        private void CarControl()
+        {
+            /*if (_accelerationPedalChanged)
+            {
+                _accelerationPedalChanged = false;
+            }
+            else
+            {
+                _accelerationPedalPos = 0;
+            }
+            
+            if (_brakePedalChanged)
+            {
+                _brakePedalChanged = false;
+            }
+            else
+            {
+                _brakePedalPos = 0;
+            }*/
+            
+            //Steering
+            wheelCollider_FR.steerAngle = maxSteerAngle * _steeringWheelPos;
+            wheelCollider_FL.steerAngle = maxSteerAngle * _steeringWheelPos;
+            
+            //Brake
+            wheelCollider_FR.brakeTorque = _brakePedalPos * maxBrakeTorque;
+            wheelCollider_FL.brakeTorque = _brakePedalPos * maxBrakeTorque;
+            wheelCollider_RR.brakeTorque = _brakePedalPos * maxBrakeTorque / frontRearBrakeRatio;
+            wheelCollider_RL.brakeTorque = _brakePedalPos * maxBrakeTorque / frontRearBrakeRatio;
+
+            //ParkingBrake
+            if (parkingBrake)
+            {
+                wheelCollider_RR.brakeTorque += 1000;
+                wheelCollider_RL.brakeTorque += 1000;   
+            }
+
+            WheelTorqueCalculation();
+        }
+
+        private void WheelTorqueCalculation()
+        {
+            /*float totalEngineTorque = 0;
+            if (_accelerationPedalPos < 0.01f)
+            {
+                totalEngineTorque -= engineBrakeTorque;
+            }
+
+            float avgTorqueFromWheels = 0;
+            wheelCollider_RL.GetGroundHit(out WheelHit hit);
+            wheelCollider_RL.*/
+
+            if (_currentGear > frontGearRatios.Count || _currentGear < -1 || _currentGear == 0)// || _accelerationPedalPos == 0)
+            {
+                wheelCollider_FL.motorTorque = 0;
+                wheelCollider_FR.motorTorque = 0;
+                wheelCollider_RL.motorTorque = 0;
+                wheelCollider_RR.motorTorque = 0;
+                return;
+            }
+
+            int driveWheels = 2;
+
+            if (wheelDriveType == WheelDriveType.AWD)
+                driveWheels = 4;
+
+            float currentAvgRpmOnWheels = 0;
+            
+            if (((int)wheelDriveType & 1) > 0)
+            {
+                currentAvgRpmOnWheels += wheelCollider_FL.rpm;
+                currentAvgRpmOnWheels += wheelCollider_FR.rpm;
+            }
+            
+            if (((int)wheelDriveType & 0b10) > 0)
+            {
+                currentAvgRpmOnWheels += wheelCollider_RL.rpm;
+                currentAvgRpmOnWheels += wheelCollider_RR.rpm;
+            }
+
+            currentAvgRpmOnWheels /= driveWheels;
+            
+            
+            avgRpmLastStepsValues.Enqueue(currentAvgRpmOnWheels);
+
+            if (avgRpmLastStepsValues.Count > avgRpmInterpolationSteps)
+            {
+                Debug.LogError("Car interpolation queue overflow");
+                avgRpmLastStepsValues.Clear();
+                avgRpmLastStepsValues.Enqueue(currentAvgRpmOnWheels);
+            }
+            
+            if (avgRpmLastStepsValues.Count == avgRpmInterpolationSteps)
+            {
+                avgRpmLastStepsValues.Dequeue();
+            }
+            
+            float interpolatedAvgRpmOnWheels = 0;
+            
+            foreach (var value in avgRpmLastStepsValues)
+            {
+                interpolatedAvgRpmOnWheels += value;
+            }
+            
+            interpolatedAvgRpmOnWheels /= avgRpmLastStepsValues.Count;
+
+            float currentGearRatio = 0;
+            if (_currentGear > 0)
+            {
+                currentGearRatio = frontGearRatios[_currentGear - 1];
+            }
+            else if(_currentGear < 0)
+            {
+                currentGearRatio = rearGearRatio;
+            }
+
+            currentEngineRpm = Mathf.Clamp(interpolatedAvgRpmOnWheels * currentGearRatio, idleRpm, maxEngineRpm);
+
+            if (currentEngineRpm > maxEngineRpm)
+            {
+                wheelCollider_FL.motorTorque = 0;
+                wheelCollider_FR.motorTorque = 0;
+                wheelCollider_RL.motorTorque = 0;
+                wheelCollider_RR.motorTorque = 0;
+                return;
+            }
+
+            float engineTorque = torqueCurve.Evaluate(currentEngineRpm / maxEngineRpm) * maxEngineTorque * _accelerationPedalPos;
+            
+            _wheelSpeedKmh = (interpolatedAvgRpmOnWheels / 60f) * wheelCollider_FL.radius * 2 * Mathf.PI * 3.6f;
+            
+            Debug.LogFormat("torque {0}, rpm {1}, km/h {2}, gear {3}", engineTorque, currentEngineRpm, _wheelSpeedKmh, _currentGear);
+
+            float totalWheelTorque = engineTorque * currentGearRatio;
+
+            float torquePerWheel = totalWheelTorque / driveWheels;
+
+            if (((int)wheelDriveType & 1) > 0)
+            {
+                wheelCollider_FL.motorTorque = torquePerWheel;
+                wheelCollider_FR.motorTorque = torquePerWheel;
+            }
+            
+            if (((int)wheelDriveType & 0b10) > 0)
+            {
+                wheelCollider_RL.motorTorque = torquePerWheel;
+                wheelCollider_RR.motorTorque = torquePerWheel;
+            }
+        }
+
+        public void Steering(float steeringWheelPos)
+        {
+            _steeringWheelPos = steeringWheelPos;
+        }
+
+        public void AccelerationPedal(float gasAxis)
+        {
+            _accelerationPedalPos = gasAxis;
+            _accelerationPedalChanged = true;
+        }
+
+        public void BrakePedal(float brakeAxis)
+        {
+            _brakePedalPos = brakeAxis;
+            _brakePedalChanged = true;
+        }
+        
+        public void GearUp()
+        {
+            if (_currentGear < frontGearRatios.Count)
+            {
+                _currentGear++;
+            }
+        }
+        
+        public void GearDown()
+        {
+            if (_currentGear > -1)
+            {
+                _currentGear--;
+            }
+        }
+
+        public void ParkingBrake(bool isBrake)
+        {
+            parkingBrake = isBrake;
         }
     }
 }
