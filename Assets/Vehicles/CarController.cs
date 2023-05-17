@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -37,6 +38,13 @@ namespace Vehicles
         [SerializeField] protected WheelCollider wheelCollider_RR;
         [SerializeField] protected Transform wheelRenderer_RR;
 
+        [SerializeField] private AudioSource engineAudioSource;
+        [SerializeField] private AudioClip engineStartSound;
+        [SerializeField] private AudioClip engineIdleSound;
+        [SerializeField] private float engineIdleSoundRpm;
+        [SerializeField] private AudioClip engineRpmDropSound;
+        [SerializeField] private AudioClip engineStopSound;
+
         private Vector3 tmpPos;
         private Quaternion tmpRot;
 
@@ -49,9 +57,11 @@ namespace Vehicles
         [Range(0f, 1f)] private float _brakePedalPos;
         private bool _brakePedalChanged;
         
-        private bool parkingBrake;
+        private bool _parkingBrake;
 
-        private float currentEngineRpm = 1000;
+        private bool _engineOn;
+        private bool _engineStarting;
+        private float _currentEngineRpm = 1000;
         private int _currentGear = 0;
         private float _wheelSpeedKmh;
 
@@ -72,9 +82,53 @@ namespace Vehicles
 
         private void Start()
         {
+            if (_engineOn)
+            {
+                _currentEngineRpm = idleRpm;
+            }
+            else
+            {
+                _currentEngineRpm = 0;
+            }
+
             GetComponent<Rigidbody>().centerOfMass = centerOfGravity.localPosition;
+
+            StartCoroutine(StartEngine());
         }
 
+        private IEnumerator StartEngine()
+        {
+            if (_engineStarting)
+            {
+                yield break;
+            }
+            
+            _engineOn = true;
+            _engineStarting = true;
+            engineAudioSource.clip = engineIdleSound;
+            engineAudioSource.Stop();
+            engineAudioSource.PlayOneShot(engineStartSound);
+            engineAudioSource.loop = false;
+            engineAudioSource.PlayScheduled(AudioSettings.dspTime + engineStartSound.length);
+            
+            yield return new WaitForSeconds(engineStartSound.length);
+
+            _currentEngineRpm = idleRpm;
+            _engineStarting = false;
+            engineAudioSource.loop = true;
+        }
+
+        private IEnumerator StopEngine()
+        {
+            if (_engineStarting)
+            {
+                yield break;
+            }
+
+            _engineOn = false;
+            _currentEngineRpm = 0;
+        }
+        
         void Update()
         {
             //TMP TEST
@@ -101,10 +155,9 @@ namespace Vehicles
                 GearDown();
             }
             Debug.LogErrorFormat("left rpm {0}, right rpm {1}", wheelCollider_RL.rpm, wheelCollider_RR.rpm);
-
-
-
-
+            //TMP TEST
+            
+            
             wheelCollider_FL.GetWorldPose(out tmpPos,out tmpRot);
             wheelRenderer_FL.position = tmpPos;
             wheelRenderer_FL.rotation = tmpRot;
@@ -120,33 +173,25 @@ namespace Vehicles
             wheelCollider_RR.GetWorldPose(out tmpPos,out tmpRot);
             wheelRenderer_RR.position = tmpPos;
             wheelRenderer_RR.rotation = tmpRot;
+
+            AudioCalculation();
         }
 
         private void FixedUpdate()
         {
             CarControl();
         }
+        
+        private void AudioCalculation()
+        {
+            if(_engineStarting || !_engineOn)
+                return;
+
+            engineAudioSource.pitch = _currentEngineRpm / engineIdleSoundRpm;
+        }
 
         private void CarControl()
         {
-            /*if (_accelerationPedalChanged)
-            {
-                _accelerationPedalChanged = false;
-            }
-            else
-            {
-                _accelerationPedalPos = 0;
-            }
-            
-            if (_brakePedalChanged)
-            {
-                _brakePedalChanged = false;
-            }
-            else
-            {
-                _brakePedalPos = 0;
-            }*/
-            
             //Steering
             wheelCollider_FR.steerAngle = maxSteerAngle * _steeringWheelPos;
             wheelCollider_FL.steerAngle = maxSteerAngle * _steeringWheelPos;
@@ -158,7 +203,7 @@ namespace Vehicles
             wheelCollider_RL.brakeTorque = _brakePedalPos * maxBrakeTorque / frontRearBrakeRatio;
 
             //ParkingBrake
-            if (parkingBrake)
+            if (_parkingBrake)
             {
                 wheelCollider_RR.brakeTorque += 1000;
                 wheelCollider_RL.brakeTorque += 1000;   
@@ -169,17 +214,7 @@ namespace Vehicles
 
         private void WheelTorqueCalculation()
         {
-            /*float totalEngineTorque = 0;
-            if (_accelerationPedalPos < 0.01f)
-            {
-                totalEngineTorque -= engineBrakeTorque;
-            }
-
-            float avgTorqueFromWheels = 0;
-            wheelCollider_RL.GetGroundHit(out WheelHit hit);
-            wheelCollider_RL.*/
-
-            if (_currentGear > frontGearRatios.Count || _currentGear < -1 || _currentGear == 0)// || _accelerationPedalPos == 0)
+            if (_currentGear > frontGearRatios.Count || _currentGear < -1 || _currentGear == 0 || !_engineOn)// || _accelerationPedalPos == 0)
             {
                 wheelCollider_FL.motorTorque = 0;
                 wheelCollider_FR.motorTorque = 0;
@@ -243,9 +278,9 @@ namespace Vehicles
                 currentGearRatio = rearGearRatio;
             }
 
-            currentEngineRpm = Mathf.Clamp(interpolatedAvgRpmOnWheels * currentGearRatio, idleRpm, maxEngineRpm);
+            _currentEngineRpm = Mathf.Clamp(interpolatedAvgRpmOnWheels * currentGearRatio, idleRpm, maxEngineRpm);
 
-            if (currentEngineRpm > maxEngineRpm)
+            if (_currentEngineRpm > maxEngineRpm)
             {
                 wheelCollider_FL.motorTorque = 0;
                 wheelCollider_FR.motorTorque = 0;
@@ -254,11 +289,11 @@ namespace Vehicles
                 return;
             }
 
-            float engineTorque = torqueCurve.Evaluate(currentEngineRpm / maxEngineRpm) * maxEngineTorque * _accelerationPedalPos;
+            float engineTorque = torqueCurve.Evaluate(_currentEngineRpm / maxEngineRpm) * maxEngineTorque * _accelerationPedalPos;
             
             _wheelSpeedKmh = (interpolatedAvgRpmOnWheels / 60f) * wheelCollider_FL.radius * 2 * Mathf.PI * 3.6f;
             
-            Debug.LogFormat("torque {0}, rpm {1}, km/h {2}, gear {3}", engineTorque, currentEngineRpm, _wheelSpeedKmh, _currentGear);
+            Debug.LogFormat("torque {0}, rpm {1}, km/h {2}, gear {3}", engineTorque, _currentEngineRpm, _wheelSpeedKmh, _currentGear);
 
             float totalWheelTorque = engineTorque * currentGearRatio;
 
@@ -307,12 +342,20 @@ namespace Vehicles
             if (_currentGear > -1)
             {
                 _currentGear--;
+                if (_currentGear == 0)
+                {
+                    _currentEngineRpm = idleRpm;
+                }
             }
         }
 
         public void ParkingBrake(bool isBrake)
         {
-            parkingBrake = isBrake;
+            _parkingBrake = isBrake;
+            if (_currentGear == 0)
+            {
+                _currentEngineRpm = idleRpm;
+            }
         }
     }
 }
