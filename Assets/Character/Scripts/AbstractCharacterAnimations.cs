@@ -31,6 +31,8 @@ namespace Character.Scripts
         protected Weapon currentWeapon;
 
 
+        protected int id_horizontal;
+        protected int id_vertical;
         protected int id_isAiming;
         protected int id_isGrounded;
         protected int id_putGun;
@@ -50,6 +52,8 @@ namespace Character.Scripts
             id_takeGun = Animator.StringToHash("takeGun");
             id_reload = Animator.StringToHash("reload");
             id_jump = Animator.StringToHash("jump");
+            id_horizontal = Animator.StringToHash("horizontal");
+            id_vertical = Animator.StringToHash("vertical");
         }
 
         protected virtual void OnDisable()
@@ -298,5 +302,11 @@ namespace Character.Scripts
         }
 
         #endregion
+
+        public void SitInCar()
+        {
+            animator.SetFloat(id_horizontal,0);
+            animator.SetFloat(id_vertical,0);
+        }
     }
 }

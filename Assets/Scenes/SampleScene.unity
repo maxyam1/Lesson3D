@@ -377,7 +377,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &247944305
 Transform:
   m_ObjectHideFlags: 0
@@ -391,7 +391,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 469292338}
-  m_RootOrder: 36
+  m_RootOrder: 37
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &247944307
 Camera:
@@ -739,6 +739,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1023542382}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &318435913
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 318435914}
+  m_Layer: 0
+  m_Name: DriverSeat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &318435914
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318435913}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.351, y: 0.066, z: 0.118}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 469292338}
+  m_RootOrder: 36
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &355449966
 GameObject:
@@ -1213,7 +1244,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1256625469714818, guid: 02e641040fb499c49a848e40f535164a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1610265466720824, guid: 02e641040fb499c49a848e40f535164a, type: 3}
       propertyPath: m_Name
@@ -1233,7 +1264,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4013073016293618, guid: 02e641040fb499c49a848e40f535164a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -49.61
+      value: -11.14
       objectReference: {fileID: 0}
     - target: {fileID: 4013073016293618, guid: 02e641040fb499c49a848e40f535164a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1290,9 +1321,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 4300062, guid: df7495afdce80f54694ff3d2fae828ac, type: 3}
 --- !u!54 &469292335
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1318,7 +1349,7 @@ MeshCollider:
   m_GameObject: {fileID: 469292333}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -1340,6 +1371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa8bccef0bf7c2d46a856771a71395c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  seat: {fileID: 318435914}
   centerOfGravity: {fileID: 1665852402}
   maxEngineTorque: 100
   maxEngineRpm: 5000
@@ -3811,6 +3843,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 941832853}
     m_Modifications:
+    - target: {fileID: 4653786501186693529, guid: c413af1eaad805c47a3d87a6e5c7b3d7, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4245283
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653786501186693529, guid: c413af1eaad805c47a3d87a6e5c7b3d7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4245283
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653786501186693529, guid: c413af1eaad805c47a3d87a6e5c7b3d7, type: 3}
+      propertyPath: m_Color.r
+      value: 0.4245283
+      objectReference: {fileID: 0}
     - target: {fileID: 5193111652346960149, guid: c413af1eaad805c47a3d87a6e5c7b3d7, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3898,6 +3942,18 @@ PrefabInstance:
     - target: {fileID: 5894128805910956863, guid: c413af1eaad805c47a3d87a6e5c7b3d7, type: 3}
       propertyPath: m_Name
       value: RpmrNeedle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7386999808264182805, guid: c413af1eaad805c47a3d87a6e5c7b3d7, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7386999808264182805, guid: c413af1eaad805c47a3d87a6e5c7b3d7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7386999808264182805, guid: c413af1eaad805c47a3d87a6e5c7b3d7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c413af1eaad805c47a3d87a6e5c7b3d7, type: 3}
@@ -4662,6 +4718,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7858b243e1629f04cb87eef013e6f73e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!136 &543450652082494834 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 7153614718996018341, guid: c50a515894765214cb275dd317093c7f, type: 3}
+  m_PrefabInstance: {fileID: 7153614717460991975}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4672832031048940172
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6592,6 +6653,14 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7153614718996018342, guid: c50a515894765214cb275dd317093c7f, type: 3}
+      propertyPath: ragdollLayer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7153614718996018342, guid: c50a515894765214cb275dd317093c7f, type: 3}
+      propertyPath: capsuleCollider
+      value: 
+      objectReference: {fileID: 543450652082494834}
+    - target: {fileID: 7153614718996018342, guid: c50a515894765214cb275dd317093c7f, type: 3}
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 1234714285}
@@ -6599,6 +6668,10 @@ PrefabInstance:
       propertyPath: playerAnimations
       value: 
       objectReference: {fileID: 543450652082494830}
+    - target: {fileID: 7153614718996018342, guid: c50a515894765214cb275dd317093c7f, type: 3}
+      propertyPath: ragdollLayerInCar
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 7153614718996018342, guid: c50a515894765214cb275dd317093c7f, type: 3}
       propertyPath: ragdollRigidbodies.Array.size
       value: 11

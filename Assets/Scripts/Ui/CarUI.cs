@@ -27,19 +27,25 @@ namespace Ui
             set
             {
                 _car = value;
-                if (value == null)
-                {
-                    _instance.ui.gameObject.SetActive(false);
-                }
-                else
-                {
-                    _instance.ChangeUI();
-                }
+                _instance.ChangeUI();
             }
+        }
+
+        private void Start()
+        {
+            ChangeUI();
         }
 
         private void ChangeUI()
         {
+            if (!_car)
+            {
+                ui.gameObject.SetActive(false);
+                return;
+            }
+            
+            ui.gameObject.SetActive(true);
+
             for (int i = spawnedLines.Count - 1; i >= 0; i--)
             {
                 Destroy(spawnedLines[i].gameObject);

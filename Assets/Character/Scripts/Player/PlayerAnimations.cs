@@ -9,14 +9,9 @@ namespace Character.Scripts
 {
     public class PlayerAnimations : AbstractCharacterAnimations
     {
-        protected int id_vertical;
-        protected int id_horizontal;
-        
         protected override void OnEnable()
         {
             base.OnEnable();
-            id_vertical = Animator.StringToHash("vertical");
-            id_horizontal = Animator.StringToHash("horizontal");
         }
 
         protected override void StandardLocomotion(float horizontal, float vertical)

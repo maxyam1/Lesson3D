@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Vehicles;
 using Weapons;
 
 namespace Character.Scripts
@@ -13,6 +14,18 @@ namespace Character.Scripts
         private bool _isAiming;
 
         void Update()
+        {
+            if (car)
+            {
+                CarMovement();
+            }
+            else
+            {
+                StandardMovement();
+            }
+        }
+
+        private void StandardMovement()
         {
             //Прицеливание
             if (Input.GetMouseButtonUp(1))
@@ -77,17 +90,34 @@ namespace Character.Scripts
                     characterAnimations.SetJump();
                 }
                 
-                //Подбор оружия
+                //Взаимодействие
                 if(Input.GetKeyDown(KeyCode.E))
                 {
                     RaycastHit hit;
                     if (Physics.Raycast(cameraController.cameraTransform.position,
                             cameraController.cameraTransform.forward, out hit, 4 ,notPlayerCapsuleCollider))
                     {
-                        WeaponOnGround weaponOnGround = hit.collider.GetComponent<WeaponOnGround>();
-                        if (weaponOnGround)
+                        //Подбор оружия
+                        var usable = hit.collider.GetComponent<IUsable>();
+                        if (usable != null)
                         {
-                            inventory.ChangeWeapon(weaponOnGround); 
+                            switch (usable.GetUsableType())
+                            {
+                                case UsableType.Car:
+                                    SitInCar(usable as CarController);
+                                    return;
+                                    break;
+                                case UsableType.WeaponOnGround:
+                                    WeaponOnGround weaponOnGround = usable as WeaponOnGround;
+                                    if (weaponOnGround)
+                                    {
+                                        inventory.ChangeWeapon(weaponOnGround); 
+                                    }
+                                    break;
+                                case UsableType.AmmoBox:
+                                    //TODO
+                                    break;
+                            }
                         }
                     }
                 }
@@ -98,6 +128,38 @@ namespace Character.Scripts
             }
             
             characterAnimations.SetIsGrounded(isGrounded);
+        }
+
+        private void CarMovement()
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                GetOutFromCar();
+                return;
+            }
+
+            car.Steering(Input.GetAxis("Horizontal"));
+            float vertical = Input.GetAxis("Vertical");
+            if (vertical >= 0)
+            {
+                car.AccelerationPedal(vertical);
+                car.BrakePedal(0);
+            }
+            else
+            {
+                car.AccelerationPedal(0);
+                car.BrakePedal(-vertical);
+            }
+            
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                car.GearUp();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                car.GearDown();
+            }
         }
 
         private void LateUpdate()

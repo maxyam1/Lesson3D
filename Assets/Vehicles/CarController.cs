@@ -7,8 +7,9 @@ using UnityEngine.Serialization;
 
 namespace Vehicles
 {
-    public class CarController : MonoBehaviour
+    public class CarController : MonoBehaviour, IUsable
     {
+        [SerializeField] private Transform seat;
         [SerializeField] private Transform centerOfGravity;
         [SerializeField] private float maxEngineTorque = 100;
         [SerializeField] private float maxEngineRpm = 6000;
@@ -72,7 +73,8 @@ namespace Vehicles
         public float MaxEngineRpm => maxEngineRpm;
         public float WheelSpeedKmh => _wheelSpeedKmh;
         public int Gear => _currentGear;
-        
+        public Transform Seat => seat;
+
         /// <summary>
         ///| 01 if fwd |
         ///| 10 if rwd |
@@ -88,7 +90,7 @@ namespace Vehicles
 
         private void Start()
         {
-            CarUI.Car = this;//Test
+            //CarUI.Car = this;//Test
             
             if (_engineOn)
             {
@@ -101,7 +103,19 @@ namespace Vehicles
 
             GetComponent<Rigidbody>().centerOfMass = centerOfGravity.localPosition;
 
-            StartCoroutine(StartEngine());
+            //StartCoroutine(StartEngine());
+        }
+
+        public void TurnOnOffEngine(bool start)
+        {
+            if (start)
+            {
+                StartCoroutine(StartEngine());
+            }
+            else
+            {
+                StartCoroutine(StopEngine());
+            }
         }
 
         private IEnumerator StartEngine()
@@ -139,33 +153,6 @@ namespace Vehicles
         
         void Update()
         {
-            //TMP TEST
-            Steering(Input.GetAxis("Horizontal"));
-            float vertical = Input.GetAxis("Vertical");
-            if (vertical >= 0)
-            {
-                AccelerationPedal(vertical);
-                BrakePedal(0);
-            }
-            else
-            {
-                AccelerationPedal(0);
-                BrakePedal(-vertical);
-            }
-            
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                GearUp();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                GearDown();
-            }
-            Debug.LogErrorFormat("left rpm {0}, right rpm {1}", wheelCollider_RL.rpm, wheelCollider_RR.rpm);
-            //TMP TEST
-            
-            
             wheelCollider_FL.GetWorldPose(out tmpPos,out tmpRot);
             wheelRenderer_FL.position = tmpPos;
             wheelRenderer_FL.rotation = tmpRot;
@@ -364,6 +351,15 @@ namespace Vehicles
         public void ParkingBrake(bool isBrake)
         {
             _parkingBrake = isBrake;
+        }
+
+        public void Use(CharacterController user)
+        {
+        }
+
+        public UsableType GetUsableType()
+        {
+            return UsableType.Car;
         }
     }
 }
