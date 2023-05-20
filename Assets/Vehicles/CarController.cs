@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Ui;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -66,6 +67,11 @@ namespace Vehicles
         private float _wheelSpeedKmh;
 
         private Queue<float> avgRpmLastStepsValues = new Queue<float>();
+
+        public float EngineRpm => _currentEngineRpm;
+        public float MaxEngineRpm => maxEngineRpm;
+        public float WheelSpeedKmh => _wheelSpeedKmh;
+        public int Gear => _currentGear;
         
         /// <summary>
         ///| 01 if fwd |
@@ -82,6 +88,8 @@ namespace Vehicles
 
         private void Start()
         {
+            CarUI.Car = this;//Test
+            
             if (_engineOn)
             {
                 _currentEngineRpm = idleRpm;
@@ -334,6 +342,10 @@ namespace Vehicles
             if (_currentGear < frontGearRatios.Count)
             {
                 _currentGear++;
+                if (_currentGear == 0)
+                {
+                    _currentEngineRpm = idleRpm;
+                }
             }
         }
         
@@ -352,10 +364,6 @@ namespace Vehicles
         public void ParkingBrake(bool isBrake)
         {
             _parkingBrake = isBrake;
-            if (_currentGear == 0)
-            {
-                _currentEngineRpm = idleRpm;
-            }
         }
     }
 }
