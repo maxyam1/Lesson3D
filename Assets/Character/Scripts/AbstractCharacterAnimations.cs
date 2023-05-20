@@ -39,6 +39,7 @@ namespace Character.Scripts
         protected int id_takeGun;
         protected int id_reload;
         protected int id_jump;
+        protected int id_sitingInCar;
         
 
         protected virtual void OnEnable()
@@ -54,6 +55,7 @@ namespace Character.Scripts
             id_jump = Animator.StringToHash("jump");
             id_horizontal = Animator.StringToHash("horizontal");
             id_vertical = Animator.StringToHash("vertical");
+            id_sitingInCar = Animator.StringToHash("sitingInCar");
         }
 
         protected virtual void OnDisable()
@@ -206,13 +208,27 @@ namespace Character.Scripts
                 return;
             }
 
-            if (isAiming)
+            if (characterController.InCar)
             {
-                animator.SetLookAtWeight(1f, 0f, 1f);
+                if (isAiming)
+                {
+                    //animator.SetLookAtWeight(1f, 0f, 1f);
+                }
+                else
+                {
+                    animator.SetLookAtWeight(0.3f, 0f, 0.3f);
+                }
             }
             else
             {
-                animator.SetLookAtWeight(0.3f, 0.3f, 0.3f);
+                if (isAiming)
+                {
+                    animator.SetLookAtWeight(1f, 0f, 1f);
+                }
+                else
+                {
+                    animator.SetLookAtWeight(0.3f, 0.3f, 0.3f);
+                } 
             }
             
             animator.SetLookAtPosition(targetLook.position);
@@ -307,6 +323,12 @@ namespace Character.Scripts
         {
             animator.SetFloat(id_horizontal,0);
             animator.SetFloat(id_vertical,0);
+            animator.SetBool(id_sitingInCar,true);
+        }
+
+        public void GetOutFromCar()
+        {
+            animator.SetBool(id_sitingInCar,false);
         }
     }
 }

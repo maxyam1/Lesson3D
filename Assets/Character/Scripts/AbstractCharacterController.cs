@@ -23,7 +23,12 @@ namespace Character.Scripts
         [FormerlySerializedAs("capsuleCollide")] [SerializeField] protected CapsuleCollider capsuleCollider;
 
         private RigidBodySave _savedRigidbody;
-        
+
+        public bool InCar
+        {
+            get { return car; }
+        }
+
         private void Start()
         {
             foreach (var rb in ragdollRigidbodies)
@@ -59,7 +64,7 @@ namespace Character.Scripts
         protected void SitInCar(CarController car)
         {
             this.car = car;
-            transform.position = this.car.Seat.position;
+            transform.localRotation = Quaternion.identity;
             transform.SetParent(this.car.Seat);
             capsuleCollider.enabled = false;
             SetLayerToRagdoll(ragdollLayerInCar);
@@ -68,12 +73,14 @@ namespace Character.Scripts
             SaveRigidBody();
             CarUI.Car = car;
             car.TurnOnOffEngine(true);
+            transform.localPosition = Vector3.zero;
         }
         protected void GetOutFromCar()
         {
             CarUI.Car = null;
             car.TurnOnOffEngine(false);
             SetLayerToRagdoll(ragdollLayer);
+            characterAnimations.GetOutFromCar();
             LoadRigidBody();
             capsuleCollider.enabled = true;
             car = null;

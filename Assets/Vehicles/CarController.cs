@@ -135,20 +135,25 @@ namespace Vehicles
             
             yield return new WaitForSeconds(engineStartSound.length);
 
-            _currentEngineRpm = idleRpm;
             _engineStarting = false;
+            if (!_engineOn)
+            {
+                yield break;
+            }
+
+            _currentEngineRpm = idleRpm;
             engineAudioSource.loop = true;
         }
 
         private IEnumerator StopEngine()
         {
-            if (_engineStarting)
-            {
-                yield break;
-            }
-
+            engineAudioSource.clip = null;
+            engineAudioSource.Stop();
+            engineAudioSource.PlayOneShot(engineStopSound);
             _engineOn = false;
             _currentEngineRpm = 0;
+            
+            yield break;
         }
         
         void Update()
