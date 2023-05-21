@@ -63,34 +63,37 @@ namespace Character.Scripts
         
         protected void EnterInCar(CarController car)
         {
-            Action onWeaponTakedAway = () =>
-            {
-                capsuleCollider.enabled = false;
-                SetLayerToRagdoll(ragdollLayerInCar);
-                SaveRigidBody();
+            //Начатьубирать оружие
+            //Подойти к двери
+            //Когда оружие убрано схватить ручку и толкнуть дверь
+            
+            this.car = car;
+            capsuleCollider.enabled = false;
+            SetLayerToRagdoll(ragdollLayerInCar);
+            SaveRigidBody();
+            
+            transform.SetParent(car.DriverDoorPlayerTargetPosition);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
 
-                characterAnimations.StartCoroutine(characterAnimations.EnterInCar(car, () =>
-                {
-                    this.car = car;
-                    transform.SetParent(car.Seat);
-                    transform.localRotation = Quaternion.identity;
-                    CarUI.Car = car;
-                    car.TurnOnOffEngine(true);
-                    transform.localPosition = Vector3.zero;
-                }));
-            };
-
-            if (!inventory.ChangeWeapon(WeaponSlot.NoWeapon, onWeaponTakedAway))
-            {
-                onWeaponTakedAway.Invoke();
-            }
+            characterAnimations.EnterInCar(car, FinallyEnteredCar);
         }
+
+        protected void FinallyEnteredCar()
+        {
+            transform.SetParent(car.Seat);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+            CarUI.Car = car;
+            car.TurnOnOffEngine(true);
+        }
+
         protected void ExitFromCar()
         {
             CarUI.Car = null;
             car.TurnOnOffEngine(false);
             SetLayerToRagdoll(ragdollLayer);
-            characterAnimations.GetOutFromCar();
+            characterAnimations.ExitFromCar();
             LoadRigidBody();
             capsuleCollider.enabled = true;
             car = null;

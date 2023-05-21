@@ -11,6 +11,8 @@ namespace Vehicles
     {
         [SerializeField] private Transform seat;
         [SerializeField] private Transform driverDoorPlayerTargetPosition;
+        [SerializeField] private HingeJoint driverDoorHingeJoint;
+        [SerializeField] private Rigidbody driverDoorRigidBody;
         [SerializeField] private Transform driverDoorHandleTarget;
         [SerializeField] private Transform centerOfGravity;
         [SerializeField] private float maxEngineTorque = 100;
@@ -369,6 +371,25 @@ namespace Vehicles
         public UsableType GetUsableType()
         {
             return UsableType.Car;
+        }
+
+        public void OpenDoor()
+        {
+            driverDoorHingeJoint.limits = new JointLimits()
+            {
+                min = 0,
+                max = 60
+            };
+            driverDoorRigidBody.AddForceAtPosition(-driverDoorRigidBody.transform.right * 200, driverDoorHandleTarget.position);
+        }
+
+        public void CloseDoor()
+        {
+            driverDoorHingeJoint.limits = new JointLimits()
+            {
+                min = 0,
+                max = 0
+            };
         }
     }
 }

@@ -102,6 +102,11 @@ namespace Character.Scripts
             }
         }
 
+        private void SetLeftHandWeight(float weight)
+        {
+            leftHandWeight = weight;
+        }
+        
         private void SetLeftHandWeight(float weight, float duration)
         {
             DOTween.To(()=>leftHandWeight, (value)=>leftHandWeight = value, weight, duration);
@@ -323,39 +328,59 @@ namespace Character.Scripts
 
         #region ==CarSitting==
 
-        public IEnumerator EnterInCar(CarController car, Action onSitAnimFinished)
+        private Action _onEnteringAnimFinished;
+        private CarController _car;
+        public void EnterInCar(CarController car, Action onEnteringAnimFinished)
         {
+            _car = car;
+            _onEnteringAnimFinished = onEnteringAnimFinished;
             animator.SetFloat(id_horizontal,0);
             animator.SetFloat(id_vertical,0);
-
-            transform.position = car.DriverDoorPlayerTargetPosition.position;
-            transform.rotation = car.DriverDoorPlayerTargetPosition.rotation;
             animator.SetTrigger(id_enteringCar);
-            yield return StartCoroutine(GrabCarDoorHandle(car.DriverDoorHandleTarget));
-
-            // AnimationClip clip = new AnimationClip();
-            // AnimationEvent[] events = clip.events;
-            // events[0].
-            
-            leftHandTarget = null;
-            
-            onSitAnimFinished?.Invoke();
         }
 
-        public void GetOutFromCar()
+        public void StartGrabbingCarDoorToOpen()
+        {
+            var clips = animator.GetCurrentAnimatorClipInfo(0);
+            float ikDuration = clips[0].clip.events[1].time - clips[0].clip.events[0].time;
+            
+            leftHandTarget = _car.DriverDoorHandleTarget;
+            SetLeftHandWeight(1, ikDuration);
+        }
+        public void GrabCarDoorToOpen()
+        {
+            _car.OpenDoor();
+        }
+        
+        public void UnGrabCarDoorToOpen()
+        {
+            leftHandTarget = null;
+            SetLeftHandWeight(0);
+        }
+        
+        public void GrabCarDoorToClose()
+        {
+            
+        }
+        
+        public void UnGrabCarDoorToClose()
+        {
+            
+        }
+
+        public void FinallyEnterCar()
+        {
+            _onEnteringAnimFinished?.Invoke();
+            _onEnteringAnimFinished = null;
+            _car = null;
+        }
+        
+
+        public void ExitFromCar()
         {
             //animator.SetBool(id_sitingInCar,false);
         }
         
-        private IEnumerator GrabCarDoorHandle(Transform carDriverDoorHandleTarget)
-        {
-            float duration = 2;// 0.3f;
-
-            leftHandTarget = carDriverDoorHandleTarget;
-            
-            SetLeftHandWeight(1, duration);
-            yield return new WaitForSeconds(duration);
-        }
 
         #endregion
     }
