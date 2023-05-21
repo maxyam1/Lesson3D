@@ -63,17 +63,20 @@ namespace Character.Scripts
         
         protected void SitInCar(CarController car)
         {
-            this.car = car;
-            transform.localRotation = Quaternion.identity;
+            inventory.ChangeWeapon(WeaponSlot.NoWeapon);
             transform.SetParent(this.car.Seat);
             capsuleCollider.enabled = false;
             SetLayerToRagdoll(ragdollLayerInCar);
-            
-            characterAnimations.SitInCar();
             SaveRigidBody();
-            CarUI.Car = car;
-            car.TurnOnOffEngine(true);
-            transform.localPosition = Vector3.zero;
+            
+            characterAnimations.StartCoroutine(characterAnimations.SitInCar(car,() =>
+            {
+                this.car = car;
+                transform.localRotation = Quaternion.identity;
+                CarUI.Car = car;
+                car.TurnOnOffEngine(true);
+                transform.localPosition = Vector3.zero;
+            }));
         }
         protected void GetOutFromCar()
         {

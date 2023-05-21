@@ -1,7 +1,10 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Vehicles;
 using Weapons;
 
 namespace Character.Scripts
@@ -196,7 +199,6 @@ namespace Character.Scripts
         public void TakeGun()
         {
             animator.SetTrigger(id_takeGun);
-
         }
 
         //IK
@@ -319,10 +321,16 @@ namespace Character.Scripts
 
         #endregion
 
-        public void SitInCar()
+        #region ==CarSitting==
+
+        public IEnumerator SitInCar(CarController car, Action onSitAnimFinished)
         {
             animator.SetFloat(id_horizontal,0);
             animator.SetFloat(id_vertical,0);
+
+            transform.position = car.DriverDoorPlayerTargetPosition.position;
+            yield return StartCoroutine(GrabCarDoorHandle(car.DriverDoorHandleTarget));
+            
             animator.SetBool(id_sitingInCar,true);
         }
 
@@ -330,5 +338,13 @@ namespace Character.Scripts
         {
             animator.SetBool(id_sitingInCar,false);
         }
+        
+        private IEnumerator GrabCarDoorHandle(Transform carDriverDoorHandleTarget)
+        {
+            SetLeftHandWeight(1,0.3f);
+            yield break;
+        }
+
+        #endregion
     }
 }

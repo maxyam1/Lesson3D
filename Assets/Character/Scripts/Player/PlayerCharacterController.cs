@@ -52,15 +52,15 @@ namespace Character.Scripts
                 //Смена оружия
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    inventory.ChangeWeapon(0);
+                    inventory.ChangeWeapon(WeaponSlot.MainWeapon);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    inventory.ChangeWeapon(1);
+                    inventory.ChangeWeapon(WeaponSlot.SecondaryWeapon);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
-                    inventory.ChangeWeapon(2);
+                    inventory.ChangeWeapon(WeaponSlot.NoWeapon);
                 }
                 
                 //Стрельба

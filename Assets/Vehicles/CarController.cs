@@ -10,6 +10,8 @@ namespace Vehicles
     public class CarController : MonoBehaviour, IUsable
     {
         [SerializeField] private Transform seat;
+        [SerializeField] private Transform driverDoorPlayerTargetPosition;
+        [SerializeField] private Transform driverDoorHandleTarget;
         [SerializeField] private Transform centerOfGravity;
         [SerializeField] private float maxEngineTorque = 100;
         [SerializeField] private float maxEngineRpm = 6000;
@@ -74,6 +76,8 @@ namespace Vehicles
         public float WheelSpeedKmh => _wheelSpeedKmh;
         public int Gear => _currentGear;
         public Transform Seat => seat;
+        public Transform DriverDoorPlayerTargetPosition => driverDoorPlayerTargetPosition;
+        public Transform DriverDoorHandleTarget => driverDoorHandleTarget;
 
         /// <summary>
         ///| 01 if fwd |

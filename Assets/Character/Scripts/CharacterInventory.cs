@@ -17,7 +17,7 @@ namespace Character.Scripts
         [SerializeField] private Weapon[] weaponSlots = new Weapon[3];
         
         public Weapon currentWeapon;
-        private int _currentWeaponId;
+        private WeaponSlot _currentWeaponId;
 
         private Weapon _weaponForSpawn;
 
@@ -45,15 +45,15 @@ namespace Character.Scripts
             bulletCounts[bulletType] = 0;
         }
 
-        public void ChangeWeapon(int i)
+        public void ChangeWeapon(WeaponSlot slot)
         {
-            if (_currentWeaponId == i || (currentWeapon == null && weaponSlots[i] == null))
+            if (_currentWeaponId == slot || (currentWeapon == null && weaponSlots[(int)slot] == null))
             {
                 return;
             }
 
-            _weaponForSpawn = weaponSlots[i];
-            _currentWeaponId = i;
+            _weaponForSpawn = weaponSlots[(int)slot];
+            _currentWeaponId = slot;
             
 
             if (currentWeapon != null)
@@ -68,15 +68,15 @@ namespace Character.Scripts
 
         public void ChangeWeapon(WeaponOnGround weaponOnGround)//todo допилить выбрасывание
         {
-            if (_currentWeaponId == 2)
+            if (_currentWeaponId == WeaponSlot.NoWeapon)
             {
                 return;
             }
 
-            Weapon weaponToDrop = weaponSlots[_currentWeaponId];
-            weaponSlots[_currentWeaponId] = weaponOnGround.weaponPrefab;
-            int currentID = _currentWeaponId;
-            _currentWeaponId = -1;
+            Weapon weaponToDrop = weaponSlots[(int)_currentWeaponId];
+            weaponSlots[(int)_currentWeaponId] = weaponOnGround.weaponPrefab;
+            WeaponSlot currentID = _currentWeaponId;
+            _currentWeaponId = (WeaponSlot)(-1);
             ChangeWeapon(currentID);
             if (weaponToDrop)
             {
@@ -118,5 +118,12 @@ namespace Character.Scripts
             
             return bulletCounts[currentWeapon.BulletType] > 0 && currentWeapon.LacksBullet > 0;
         }
+    }
+
+    public enum WeaponSlot
+    {
+        MainWeapon = 0,
+        SecondaryWeapon = 1,
+        NoWeapon = 2
     }
 }
