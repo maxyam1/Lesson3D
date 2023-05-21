@@ -61,24 +61,31 @@ namespace Character.Scripts
             Destroy(gameObject, 60);
         }
         
-        protected void SitInCar(CarController car)
+        protected void EnterInCar(CarController car)
         {
-            inventory.ChangeWeapon(WeaponSlot.NoWeapon);
-            transform.SetParent(this.car.Seat);
-            capsuleCollider.enabled = false;
-            SetLayerToRagdoll(ragdollLayerInCar);
-            SaveRigidBody();
-            
-            characterAnimations.StartCoroutine(characterAnimations.SitInCar(car,() =>
+            Action onWeaponTakedAway = () =>
             {
-                this.car = car;
-                transform.localRotation = Quaternion.identity;
-                CarUI.Car = car;
-                car.TurnOnOffEngine(true);
-                transform.localPosition = Vector3.zero;
-            }));
+                capsuleCollider.enabled = false;
+                SetLayerToRagdoll(ragdollLayerInCar);
+                SaveRigidBody();
+
+                characterAnimations.StartCoroutine(characterAnimations.EnterInCar(car, () =>
+                {
+                    this.car = car;
+                    transform.SetParent(car.Seat);
+                    transform.localRotation = Quaternion.identity;
+                    CarUI.Car = car;
+                    car.TurnOnOffEngine(true);
+                    transform.localPosition = Vector3.zero;
+                }));
+            };
+
+            if (!inventory.ChangeWeapon(WeaponSlot.NoWeapon, onWeaponTakedAway))
+            {
+                onWeaponTakedAway.Invoke();
+            }
         }
-        protected void GetOutFromCar()
+        protected void ExitFromCar()
         {
             CarUI.Car = null;
             car.TurnOnOffEngine(false);

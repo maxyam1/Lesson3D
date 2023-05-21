@@ -19,9 +19,9 @@ namespace Character.Scripts
         public Weapon currentWeapon;
         private WeaponSlot _currentWeaponId;
 
-        private Weapon _weaponForSpawn;
-
         [SerializeField] protected SerializableDictionary<BulletType, int> bulletCounts = new SerializableDictionary<BulletType, int>();
+
+        private (WeaponSlot from, WeaponSlot to)? _currentWeaponChanging = null;
 
 
         public void GetBulletsToMag()
@@ -45,14 +45,19 @@ namespace Character.Scripts
             bulletCounts[bulletType] = 0;
         }
 
-        public void ChangeWeapon(WeaponSlot slot)
+        #region ==ChangingWeapon==
+
+        private Action _onWeaponChangedCallback;
+        public bool ChangeWeapon(WeaponSlot slot, Action callback = null)
         {
-            if (_currentWeaponId == slot || (currentWeapon == null && weaponSlots[(int)slot] == null))
+            if (_currentWeaponId == slot || (currentWeapon == null && weaponSlots[(int)slot] == null) || _currentWeaponChanging.HasValue)
             {
-                return;
+                return false;
             }
 
-            _weaponForSpawn = weaponSlots[(int)slot];
+            _onWeaponChangedCallback = callback;
+            _currentWeaponChanging = (_currentWeaponId, slot);
+            //_weaponForSpawn = weaponSlots[(int)slot];
             _currentWeaponId = slot;
             
 
@@ -60,15 +65,17 @@ namespace Character.Scripts
             {
                 characterCharacterController.characterAnimations.PutGun();
             }
-            else if(_weaponForSpawn)
+            else if(weaponSlots[(int)slot])
             {
                 characterCharacterController.characterAnimations.TakeGun();
             }
+
+            return true;
         }
 
         public void ChangeWeapon(WeaponOnGround weaponOnGround)//todo допилить выбрасывание
         {
-            if (_currentWeaponId == WeaponSlot.NoWeapon)
+            if (_currentWeaponId == WeaponSlot.NoWeapon || _currentWeaponChanging.HasValue)
             {
                 return;
             }
@@ -89,24 +96,48 @@ namespace Character.Scripts
         public void WeaponPutted()
         {
             Destroy(currentWeapon.gameObject);
-            if (_weaponForSpawn)
+            if (weaponSlots[(int)_currentWeaponChanging.Value.to])
             {
                 characterCharacterController.characterAnimations.TakeGun();
+            }
+            else
+            {
+                _currentWeaponChanging = null;
+                try
+                {
+                    _onWeaponChangedCallback?.Invoke();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                _onWeaponChangedCallback = null;
             }
         }
         
         public void WeaponTaken()
         {
-            if (_weaponForSpawn != null)
+            if (weaponSlots[(int)_currentWeaponChanging.Value.to])
             {
-                currentWeapon = Instantiate(_weaponForSpawn, rightHand);
+                currentWeapon = Instantiate(weaponSlots[(int)_currentWeaponChanging.Value.to], rightHand);
                 currentWeapon.transform.localRotation = Quaternion.identity;
                 currentWeapon.transform.localPosition = Vector3.zero;
                 //characterCharacterController.characterAnimations.WeaponChanged(currentWeapon);
                 OnCurrentWeaponChanged?.Invoke(currentWeapon);
-                _weaponForSpawn = null;
+                _currentWeaponChanging = null;
             }
+            try
+            {
+                _onWeaponChangedCallback?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            _onWeaponChangedCallback = null;
         }
+
+        #endregion
 
         public bool CanReload()
         {

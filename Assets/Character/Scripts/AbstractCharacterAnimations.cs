@@ -42,7 +42,7 @@ namespace Character.Scripts
         protected int id_takeGun;
         protected int id_reload;
         protected int id_jump;
-        protected int id_sitingInCar;
+        protected int id_enteringCar;
         
 
         protected virtual void OnEnable()
@@ -58,7 +58,7 @@ namespace Character.Scripts
             id_jump = Animator.StringToHash("jump");
             id_horizontal = Animator.StringToHash("horizontal");
             id_vertical = Animator.StringToHash("vertical");
-            id_sitingInCar = Animator.StringToHash("sitingInCar");
+            id_enteringCar = Animator.StringToHash("enteringCar");
         }
 
         protected virtual void OnDisable()
@@ -323,26 +323,38 @@ namespace Character.Scripts
 
         #region ==CarSitting==
 
-        public IEnumerator SitInCar(CarController car, Action onSitAnimFinished)
+        public IEnumerator EnterInCar(CarController car, Action onSitAnimFinished)
         {
             animator.SetFloat(id_horizontal,0);
             animator.SetFloat(id_vertical,0);
 
             transform.position = car.DriverDoorPlayerTargetPosition.position;
+            transform.rotation = car.DriverDoorPlayerTargetPosition.rotation;
+            animator.SetTrigger(id_enteringCar);
             yield return StartCoroutine(GrabCarDoorHandle(car.DriverDoorHandleTarget));
+
+            // AnimationClip clip = new AnimationClip();
+            // AnimationEvent[] events = clip.events;
+            // events[0].
             
-            animator.SetBool(id_sitingInCar,true);
+            leftHandTarget = null;
+            
+            onSitAnimFinished?.Invoke();
         }
 
         public void GetOutFromCar()
         {
-            animator.SetBool(id_sitingInCar,false);
+            //animator.SetBool(id_sitingInCar,false);
         }
         
         private IEnumerator GrabCarDoorHandle(Transform carDriverDoorHandleTarget)
         {
-            SetLeftHandWeight(1,0.3f);
-            yield break;
+            float duration = 2;// 0.3f;
+
+            leftHandTarget = carDriverDoorHandleTarget;
+            
+            SetLeftHandWeight(1, duration);
+            yield return new WaitForSeconds(duration);
         }
 
         #endregion

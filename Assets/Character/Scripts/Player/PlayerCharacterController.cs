@@ -104,7 +104,7 @@ namespace Character.Scripts
                             switch (usable.GetUsableType())
                             {
                                 case UsableType.Car:
-                                    SitInCar(usable as CarController);
+                                    EnterInCar(usable as CarController);
                                     return;
                                     break;
                                 case UsableType.WeaponOnGround:
@@ -134,7 +134,7 @@ namespace Character.Scripts
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                GetOutFromCar();
+                ExitFromCar();
                 return;
             }
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1496,6 +1496,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seat: {fileID: 318435914}
+  driverDoorPlayerTargetPosition: {fileID: 830027650}
+  driverDoorHandleTarget: {fileID: 1925496927}
   centerOfGravity: {fileID: 1665852402}
   maxEngineTorque: 100
   maxEngineRpm: 5000
@@ -1568,6 +1570,11 @@ MonoBehaviour:
   engineRpmDropSound: {fileID: 8300000, guid: 21ee30ea9f1c30f4ab597969f6c1c0c3, type: 3}
   engineStopSound: {fileID: 8300000, guid: 9e3d51e2c8a6e9e47a9e355d33020753, type: 3}
   maxSteerAngle: 40
+--- !u!4 &483568604 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4531605640052570, guid: 02e641040fb499c49a848e40f535164a, type: 3}
+  m_PrefabInstance: {fileID: 469292331}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &519230939 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5243238144869760842, guid: c50a515894765214cb275dd317093c7f, type: 3}
@@ -2085,6 +2092,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770400953}
   m_CullTransparentMesh: 1
+--- !u!1 &830027649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 830027650}
+  m_Layer: 11
+  m_Name: DriverSitTargetPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &830027650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830027649}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.236, y: -0.366, z: -0.248}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 469292338}
+  m_RootOrder: 38
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &833718494
 GameObject:
   m_ObjectHideFlags: 0
@@ -4652,6 +4690,37 @@ Transform:
   m_Father: {fileID: 1023542382}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 89.791, z: 0}
+--- !u!1 &1925496926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1925496927}
+  m_Layer: 11
+  m_Name: DriverDoorHandle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1925496927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1925496926}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.745, y: 0.403, z: 0.062}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 483568604}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2067138124
 GameObject:
   m_ObjectHideFlags: 0
