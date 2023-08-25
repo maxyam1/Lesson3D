@@ -15,6 +15,9 @@ namespace Character.Scripts
         [SerializeField] protected Animator animator;
         [SerializeField] protected float rotationSpeed = 10;
         [SerializeField] protected Transform targetLook;
+
+        [SerializeField] protected Vector3 carSitAnimationPosDelta;
+        [SerializeField] protected Quaternion carSitAnimationRotDelta;
         
         protected Transform leftHand;
         
@@ -333,6 +336,11 @@ namespace Character.Scripts
         public void EnterInCar(CarController car, Action onEnteringAnimFinished)
         {
             _car = car;
+            
+            transform.SetParent(car.Seat);
+            transform.localPosition = carSitAnimationPosDelta;
+            transform.localRotation = carSitAnimationRotDelta;
+            
             _onEnteringAnimFinished = onEnteringAnimFinished;
             animator.SetFloat(id_horizontal,0);
             animator.SetFloat(id_vertical,0);
@@ -343,7 +351,7 @@ namespace Character.Scripts
         {
             _onEnteringAnimFinished?.Invoke();
             _onEnteringAnimFinished = null;
-            _car = null;
+            //_car = null;
         }
         
 

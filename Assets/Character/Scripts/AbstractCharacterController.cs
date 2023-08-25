@@ -73,17 +73,17 @@ namespace Character.Scripts
             SaveRigidBody();
             
             //transform.SetParent(car.DriverDoorPlayerTargetPosition);
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
+            //transform.localPosition = Vector3.zero;
+            //transform.localRotation = Quaternion.identity;
 
             characterAnimations.EnterInCar(car, FinallyEnteredCar);
         }
 
         protected void FinallyEnteredCar()
         {
-            transform.SetParent(car.Seat);
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
+            //transform.SetParent(car.Seat);
+            //transform.localPosition = Vector3.zero;
+            //transform.localRotation = Quaternion.identity;
             CarUI.Car = car;
             car.TurnOnOffEngine(true);
         }
