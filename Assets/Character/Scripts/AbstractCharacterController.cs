@@ -72,7 +72,7 @@ namespace Character.Scripts
             SetLayerToRagdoll(ragdollLayerInCar);
             SaveRigidBody();
             
-            transform.SetParent(car.DriverDoorPlayerTargetPosition);
+            //transform.SetParent(car.DriverDoorPlayerTargetPosition);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 

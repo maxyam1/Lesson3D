@@ -10,10 +10,6 @@ namespace Vehicles
     public class CarController : MonoBehaviour, IUsable
     {
         [SerializeField] private Transform seat;
-        [SerializeField] private Transform driverDoorPlayerTargetPosition;
-        [SerializeField] private HingeJoint driverDoorHingeJoint;
-        [SerializeField] private Rigidbody driverDoorRigidBody;
-        [SerializeField] private Transform driverDoorHandleTarget;
         [SerializeField] private Transform centerOfGravity;
         [SerializeField] private float maxEngineTorque = 100;
         [SerializeField] private float maxEngineRpm = 6000;
@@ -78,8 +74,6 @@ namespace Vehicles
         public float WheelSpeedKmh => _wheelSpeedKmh;
         public int Gear => _currentGear;
         public Transform Seat => seat;
-        public Transform DriverDoorPlayerTargetPosition => driverDoorPlayerTargetPosition;
-        public Transform DriverDoorHandleTarget => driverDoorHandleTarget;
 
         /// <summary>
         ///| 01 if fwd |
@@ -371,25 +365,6 @@ namespace Vehicles
         public UsableType GetUsableType()
         {
             return UsableType.Car;
-        }
-
-        public void OpenDoor()
-        {
-            driverDoorHingeJoint.limits = new JointLimits()
-            {
-                min = 0,
-                max = 60
-            };
-            driverDoorRigidBody.AddForceAtPosition(-driverDoorRigidBody.transform.right * 200, driverDoorHandleTarget.position);
-        }
-
-        public void CloseDoor()
-        {
-            driverDoorHingeJoint.limits = new JointLimits()
-            {
-                min = 0,
-                max = 0
-            };
         }
     }
 }

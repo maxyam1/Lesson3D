@@ -339,35 +339,6 @@ namespace Character.Scripts
             animator.SetTrigger(id_enteringCar);
         }
 
-        public void StartGrabbingCarDoorToOpen()
-        {
-            var clips = animator.GetCurrentAnimatorClipInfo(0);
-            float ikDuration = clips[0].clip.events[1].time - clips[0].clip.events[0].time;
-            
-            leftHandTarget = _car.DriverDoorHandleTarget;
-            SetLeftHandWeight(1, ikDuration);
-        }
-        public void GrabCarDoorToOpen()
-        {
-            _car.OpenDoor();
-        }
-        
-        public void UnGrabCarDoorToOpen()
-        {
-            leftHandTarget = null;
-            SetLeftHandWeight(0);
-        }
-        
-        public void GrabCarDoorToClose()
-        {
-            
-        }
-        
-        public void UnGrabCarDoorToClose()
-        {
-            
-        }
-
         public void FinallyEnterCar()
         {
             _onEnteringAnimFinished?.Invoke();
