@@ -169,11 +169,11 @@ Material:
     m_Ints: []
     m_Floats:
     - Boolean_969AA79A: 1
-    - Vector1_37CFA700: 0
-    - Vector1_5EFA8F9: 1
+    - Vector1_37CFA700: 0.1
+    - Vector1_5EFA8F9: 0.65
     - Vector1_5F3ADC57: 16
     - Vector1_AF1EEC73: 0
-    - Vector1_CCDC0FED: 0.024
+    - Vector1_CCDC0FED: 0
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
