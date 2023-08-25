@@ -158,7 +158,7 @@ namespace Vehicles
         
         void Update()
         {
-            wheelCollider_FL.GetWorldPose(out tmpPos,out tmpRot);
+            /*wheelCollider_FL.GetWorldPose(out tmpPos,out tmpRot);
             wheelRenderer_FL.position = tmpPos;
             wheelRenderer_FL.rotation = tmpRot;
            
@@ -174,7 +174,7 @@ namespace Vehicles
             wheelRenderer_RR.position = tmpPos;
             wheelRenderer_RR.rotation = tmpRot;
 
-            AudioCalculation();
+            AudioCalculation();*/
         }
 
         private void FixedUpdate()
