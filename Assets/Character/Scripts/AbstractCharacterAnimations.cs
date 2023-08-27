@@ -359,7 +359,7 @@ namespace Character.Scripts
             //_car = null;
         }
 
-        public void GrabDoor()
+        public void GrabDoor(CarDoorVIew.HandleType handle)
         {
             var door = _car.CarView.GetDoor(CarDoor.Left);
             if (door == null)
@@ -368,7 +368,7 @@ namespace Character.Scripts
             }
             
             door.SetDoorOpen();
-            door.SetDoorFollowTarget(animator.GetBoneTransform(HumanBodyBones.LeftHand));
+            door.SetDoorFollowTarget(animator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal), handle);
         }
 
         public void UnGrabDoor()
@@ -379,7 +379,7 @@ namespace Character.Scripts
                 return;
             }
             
-            door.SetDoorFollowTarget(null);
+            door.SetDoorFollowTarget(null, null);
         }
 
         public void CloseDoor()
@@ -390,8 +390,8 @@ namespace Character.Scripts
                 return;
             }
             
-            door.SetDoorFollowTarget(null);
-            door.SetDoorClose();
+            door.SetDoorFollowTarget(null, null);
+            door.SetDoorClose(0.25f);
         }
 
 

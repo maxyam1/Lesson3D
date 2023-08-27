@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
+using Utils.SerializableDict;
 
 namespace Vehicles
 {
@@ -8,7 +10,9 @@ namespace Vehicles
     {
         private float _minAngle;
         [SerializeField] private float maxAngle;
-        
+
+        [SerializeField] private SerializableDictionary<HandleType, Transform> handles;
+
         private Quaternion _doorBoneDefaultRotation;
         private DoorState _doorState;
         private Coroutine _openDoorCoroutine = null;
@@ -27,13 +31,15 @@ namespace Vehicles
             _doorState = DoorState.Physical;
         }
 
-        public void SetDoorClose()
+        public void SetDoorClose(float interpolateTIme)
         {
             _doorState = DoorState.Closed;
-            transform.localRotation = _doorBoneDefaultRotation;
+            
+            transform.DOLocalRotate(_doorBoneDefaultRotation.eulerAngles, interpolateTIme).SetEase(Ease.Linear)
+                .OnComplete(() => transform.localRotation = _doorBoneDefaultRotation);
         }
 
-        public void SetDoorFollowTarget(Transform target)
+        public void SetDoorFollowTarget(Transform target, HandleType? handleType)
         {
             if (_openDoorCoroutine != null)
             {
@@ -49,7 +55,7 @@ namespace Vehicles
             }
 
             _doorState = DoorState.FollowTarget;
-            _openDoorCoroutine = StartCoroutine(DoorFollowTarget(target));
+            _openDoorCoroutine = StartCoroutine(DoorFollowTarget(target, handleType));
         }
 
         private IEnumerator PhysicalDoorBehavior()//TODO
@@ -57,14 +63,34 @@ namespace Vehicles
             yield return null;
         }
         
-        private IEnumerator DoorFollowTarget(Transform target)
+        private IEnumerator DoorFollowTarget(Transform target, HandleType? handleType)
         {
+
             while (true)
             {
-                float distanceToPlane = Vector3.Dot(_car.up, target.position - transform.position);
-                Vector3 pointOnPlane = target.position - (_car.up * distanceToPlane);
+                Vector3 dirToHandle = Vector3.zero;
+                
+                if (handleType.HasValue)
+                {
+                    if (handles.ContainsKey(handleType.Value))
+                    {
+                        dirToHandle = handles[handleType.Value].localPosition;
+                        //dirToHandle.y = 0;
+                    }
+                }
+
+                float angleToHandle = Mathf.Atan(dirToHandle.x / dirToHandle.y) * Mathf.Rad2Deg;
+                
+                
+                
+                
+                Vector3 targetPos = target.position;
+                
+                float distanceToPlane = Vector3.Dot(_car.up,targetPos  - transform.position);
+                Vector3 pointOnPlane = targetPos - (_car.up * distanceToPlane);
                
                 transform.rotation = Quaternion.LookRotation(pointOnPlane - transform.position, _car.up) * _doorBoneDefaultRotation;
+                transform.Rotate(Vector3.forward, angleToHandle);
 
                 ClampDoorRotation();
                 
@@ -76,19 +102,6 @@ namespace Vehicles
         {
             Vector3 euler = transform.localRotation.eulerAngles;
             transform.localRotation = Quaternion.Euler(euler.x, Mathf.Clamp(euler.y, _minAngle, _minAngle + maxAngle), euler.z);
-
-            //Quaternion q = transform.localRotation;
-            //
-            //q.x /= q.w;
-            //q.y /= q.w;
-            //q.z /= q.w;
-            //q.w = 1.0f;
-            //
-            //float angleY = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.y);
-            //angleY = Mathf.Clamp(angleY, _minAngle, maxAngle);
-            //q.y = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleY);
-            //
-            //transform.localRotation = q.normalized;
         }
         
 
@@ -97,6 +110,12 @@ namespace Vehicles
             FollowTarget,
             Physical,
             Closed
+        }
+        
+        public enum HandleType
+        {
+            OutsideHandle,
+            InsideHandle
         }
     }
 }
