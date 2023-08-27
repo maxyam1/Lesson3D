@@ -220,29 +220,31 @@ namespace Character.Scripts
                 return;
             }
 
-            if (characterController.InCar)
+            switch (characterController.CurrentStatus)
             {
-                if (isAiming)
-                {
-                    //animator.SetLookAtWeight(1f, 0f, 1f);
-                }
-                else
-                {
-                    animator.SetLookAtWeight(0.3f, 0f, 0.3f);
-                }
+                case AbstractCharacterController.CharacterStatus.Driving:
+                    if (isAiming)
+                    {
+                        //animator.SetLookAtWeight(1f, 0f, 1f);
+                    }
+                    else
+                    {
+                        animator.SetLookAtWeight(0.3f, 0f, 0.3f);
+                    }
+                    break;
+                
+                case AbstractCharacterController.CharacterStatus.Standard:
+                    if (isAiming)
+                    {
+                        animator.SetLookAtWeight(1f, 0f, 1f);
+                    }
+                    else
+                    {
+                        animator.SetLookAtWeight(0.3f, 0.3f, 0.3f);
+                    } 
+                    break;
             }
-            else
-            {
-                if (isAiming)
-                {
-                    animator.SetLookAtWeight(1f, 0f, 1f);
-                }
-                else
-                {
-                    animator.SetLookAtWeight(0.3f, 0.3f, 0.3f);
-                } 
-            }
-            
+
             animator.SetLookAtPosition(targetLook.position);
             
             if (leftHandTarget != null)

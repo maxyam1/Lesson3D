@@ -22,12 +22,15 @@ namespace Character.Scripts
         [SerializeField] protected List<Rigidbody> ragdollRigidbodies = new List<Rigidbody>();
         [FormerlySerializedAs("capsuleCollide")] [SerializeField] protected CapsuleCollider capsuleCollider;
 
+        protected CharacterStatus currentStatus = CharacterStatus.Standard;
+        public CharacterStatus CurrentStatus => currentStatus;
+        
         private RigidBodySave _savedRigidbody;
 
-        public bool InCar
-        {
-            get { return car; }
-        }
+        //public bool InCar
+        //{
+        //    get { return car; }
+        //}
 
         private void Start()
         {
@@ -66,6 +69,8 @@ namespace Character.Scripts
             //Начатьубирать оружие
             //Подойти к двери
             //Когда оружие убрано схватить ручку и толкнуть дверь
+
+            currentStatus = CharacterStatus.EnteringCar;
             
             this.car = car;
             capsuleCollider.enabled = false;
@@ -84,24 +89,33 @@ namespace Character.Scripts
             //transform.SetParent(car.Seat);
             //transform.localPosition = Vector3.zero;
             //transform.localRotation = Quaternion.identity;
+
+            currentStatus = CharacterStatus.Driving;
+            
             CarUI.Car = car;
             car.TurnOnOffEngine(true);
         }
 
         protected void ExitFromCar()
         {
+            currentStatus = CharacterStatus.ExitingCar;
+            
             CarUI.Car = null;
             car.TurnOnOffEngine(false);
-            characterAnimations.ExitFromCar(FinallyExitFromCar);
-            car = null;
+            characterAnimations.ExitFromCar(FinallyExitFromCar); 
+            //car = null;
         }
 
         protected void FinallyExitFromCar()
         {
+            currentStatus = CharacterStatus.Standard;
+            
             transform.SetParent(null);
             SetLayerToRagdoll(ragdollLayer);
             LoadRigidBody();
             capsuleCollider.enabled = true;
+            
+            car = null;
         }
 
         private void SaveRigidBody()
@@ -123,6 +137,14 @@ namespace Character.Scripts
             {
                 bodyPart.gameObject.layer = layer;
             }
+        }
+        
+        public enum CharacterStatus
+        {
+            Standard,
+            Driving,
+            EnteringCar,
+            ExitingCar
         }
     }
     

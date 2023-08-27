@@ -143917,7 +143917,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 5.6666665
+  - time: 5.5
     functionName: FinallyExitCar
     data: 
     objectReferenceParameter: {fileID: 0}

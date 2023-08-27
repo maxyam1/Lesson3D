@@ -15,13 +15,15 @@ namespace Character.Scripts
 
         void Update()
         {
-            if (car)
+            switch (currentStatus)
             {
-                CarMovement();
-            }
-            else
-            {
-                StandardMovement();
+                case CharacterStatus.Standard:
+                    StandardMovement();
+                    break;
+                
+                case CharacterStatus.Driving:
+                    CarMovement();
+                    break;
             }
         }
 
