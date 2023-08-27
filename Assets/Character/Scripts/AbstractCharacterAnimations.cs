@@ -46,6 +46,7 @@ namespace Character.Scripts
         protected int id_reload;
         protected int id_jump;
         protected int id_enteringCar;
+        protected int id_exitCar;
         
 
         protected virtual void OnEnable()
@@ -62,6 +63,7 @@ namespace Character.Scripts
             id_horizontal = Animator.StringToHash("horizontal");
             id_vertical = Animator.StringToHash("vertical");
             id_enteringCar = Animator.StringToHash("enteringCar");
+            id_exitCar = Animator.StringToHash("exitCar");
         }
 
         protected virtual void OnDisable()
@@ -332,6 +334,7 @@ namespace Character.Scripts
         #region ==CarSitting==
 
         private Action _onEnteringAnimFinished;
+        private Action _onExitAnimFinished;
         private CarController _car;
         public void EnterInCar(CarController car, Action onEnteringAnimFinished)
         {
@@ -390,11 +393,18 @@ namespace Character.Scripts
         }
 
 
-        public void ExitFromCar()
+        public void ExitFromCar(Action onFinallyExit)
         {
+            _onExitAnimFinished = onFinallyExit;
+            animator.SetTrigger(id_exitCar);
             //animator.SetBool(id_sitingInCar,false);
         }
-        
+
+        public void FinallyExitCar()
+        {
+            _onExitAnimFinished?.Invoke();
+            _onExitAnimFinished = null;
+        }
 
         #endregion
     }

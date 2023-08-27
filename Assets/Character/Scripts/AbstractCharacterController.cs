@@ -92,13 +92,18 @@ namespace Character.Scripts
         {
             CarUI.Car = null;
             car.TurnOnOffEngine(false);
-            SetLayerToRagdoll(ragdollLayer);
-            characterAnimations.ExitFromCar();
-            LoadRigidBody();
-            capsuleCollider.enabled = true;
+            characterAnimations.ExitFromCar(FinallyExitFromCar);
             car = null;
         }
-        
+
+        protected void FinallyExitFromCar()
+        {
+            transform.SetParent(null);
+            SetLayerToRagdoll(ragdollLayer);
+            LoadRigidBody();
+            capsuleCollider.enabled = true;
+        }
+
         private void SaveRigidBody()
         {
             RigidBodySave.ToStruct(rigidbody, out _savedRigidbody);
