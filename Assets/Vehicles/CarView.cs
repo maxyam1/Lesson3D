@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Utils.SerializableDict;
 
 namespace Vehicles
 {
@@ -13,48 +15,20 @@ namespace Vehicles
         [SerializeField] private Transform wheelRenderer_RL;
         [SerializeField] private Transform wheelRenderer_RR;
 
-        [SerializeField] private Transform leftDoorBone;
-        private Quaternion _leftDoorBoneDefaultRotation;
-        
-        [SerializeField] private Transform rightDoorBone;
-        private Quaternion _rightDoorBoneDefaultRotation;
-        
-        public void Start()
-        {
-            _leftDoorBoneDefaultRotation = leftDoorBone.localRotation;
-            _rightDoorBoneDefaultRotation = rightDoorBone.localRotation;
-        }
+        [SerializeField] private SerializableDictionary<CarDoor, CarDoorVIew> doorViewDictionary;
 
         public void SetWheelRenderersPosition()
         {
         }
 
-        public void SetDoorOpen(CarDoor carDoor)
+        public CarDoorVIew GetDoor(CarDoor door)
         {
-            
-        }
-
-        public void SetDoorClose(CarDoor carDoor)
-        {
-            Transform targetDoorBone = null;
-            Quaternion defaultRotation; 
-            
-            switch (carDoor)
+            if (!doorViewDictionary.ContainsKey(door))
             {
-                case CarDoor.Left:
-                    targetDoorBone = leftDoorBone;
-                    defaultRotation = _leftDoorBoneDefaultRotation;
-                    break;
-                case CarDoor.Right:
-                    targetDoorBone = rightDoorBone;
-                    defaultRotation = _rightDoorBoneDefaultRotation;
-                    break;
-                default:
-                    defaultRotation = new Quaternion();
-                    break;
+                return null;
             }
 
-            targetDoorBone.rotation = defaultRotation;
+            return doorViewDictionary[door];
         }
     }
     

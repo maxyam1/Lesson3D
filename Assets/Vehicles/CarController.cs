@@ -9,6 +9,7 @@ namespace Vehicles
 {
     public class CarController : MonoBehaviour, IUsable
     {
+        [SerializeField] private CarView carView;
         [SerializeField] private Transform seat;
         [SerializeField] private Transform centerOfGravity;
         [SerializeField] private float maxEngineTorque = 100;
@@ -29,16 +30,9 @@ namespace Vehicles
         [SerializeField] private int avgRpmInterpolationSteps = 3;
         
         [SerializeField] protected WheelCollider wheelCollider_FL;
-        [SerializeField] protected Transform wheelRenderer_FL;
-        
         [SerializeField] protected WheelCollider wheelCollider_FR;
-        [SerializeField] protected Transform wheelRenderer_FR;
-        
         [SerializeField] protected WheelCollider wheelCollider_RL;
-        [SerializeField] protected Transform wheelRenderer_RL;
-        
         [SerializeField] protected WheelCollider wheelCollider_RR;
-        [SerializeField] protected Transform wheelRenderer_RR;
 
         [SerializeField] private AudioSource engineAudioSource;
         [SerializeField] private AudioClip engineStartSound;
@@ -74,6 +68,8 @@ namespace Vehicles
         public float WheelSpeedKmh => _wheelSpeedKmh;
         public int Gear => _currentGear;
         public Transform Seat => seat;
+
+        public CarView CarView => carView;
 
         /// <summary>
         ///| 01 if fwd |

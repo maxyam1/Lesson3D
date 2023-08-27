@@ -6,6 +6,8 @@ namespace Vehicles
 {
     public class CarDoorVIew : MonoBehaviour
     {
+        private float _minAngle;
+        [SerializeField] private float maxAngle;
         
         private Quaternion _doorBoneDefaultRotation;
         private DoorState _doorState;
@@ -17,6 +19,7 @@ namespace Vehicles
         {
             _car = transform.root;
             _doorBoneDefaultRotation = transform.localRotation;
+            _minAngle = _doorBoneDefaultRotation.eulerAngles.y;
         }
 
         public void SetDoorOpen()
@@ -27,7 +30,7 @@ namespace Vehicles
         public void SetDoorClose()
         {
             _doorState = DoorState.Closed;
-            transform.rotation = _doorBoneDefaultRotation;
+            transform.localRotation = _doorBoneDefaultRotation;
         }
 
         public void SetDoorFollowTarget(Transform target)
@@ -63,9 +66,31 @@ namespace Vehicles
                
                 transform.rotation = Quaternion.LookRotation(pointOnPlane - transform.position, _car.up) * _doorBoneDefaultRotation;
 
+                ClampDoorRotation();
+                
                 yield return null;
             }
         }
+
+        private void ClampDoorRotation()
+        {
+            Vector3 euler = transform.localRotation.eulerAngles;
+            transform.localRotation = Quaternion.Euler(euler.x, Mathf.Clamp(euler.y, _minAngle, _minAngle + maxAngle), euler.z);
+
+            //Quaternion q = transform.localRotation;
+            //
+            //q.x /= q.w;
+            //q.y /= q.w;
+            //q.z /= q.w;
+            //q.w = 1.0f;
+            //
+            //float angleY = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.y);
+            //angleY = Mathf.Clamp(angleY, _minAngle, maxAngle);
+            //q.y = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleY);
+            //
+            //transform.localRotation = q.normalized;
+        }
+        
 
         private enum DoorState
         {

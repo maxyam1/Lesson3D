@@ -353,7 +353,42 @@ namespace Character.Scripts
             _onEnteringAnimFinished = null;
             //_car = null;
         }
-        
+
+        public void GrabDoor()
+        {
+            var door = _car.CarView.GetDoor(CarDoor.Left);
+            if (door == null)
+            {
+                return;
+            }
+            
+            door.SetDoorOpen();
+            door.SetDoorFollowTarget(animator.GetBoneTransform(HumanBodyBones.LeftHand));
+        }
+
+        public void UnGrabDoor()
+        {
+            var door = _car.CarView.GetDoor(CarDoor.Left);
+            if (door == null)
+            {
+                return;
+            }
+            
+            door.SetDoorFollowTarget(null);
+        }
+
+        public void CloseDoor()
+        {
+            var door = _car.CarView.GetDoor(CarDoor.Left);
+            if (door == null)
+            {
+                return;
+            }
+            
+            door.SetDoorFollowTarget(null);
+            door.SetDoorClose();
+        }
+
 
         public void ExitFromCar()
         {

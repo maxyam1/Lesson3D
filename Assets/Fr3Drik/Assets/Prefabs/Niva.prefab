@@ -320,6 +320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3033535907072788984}
   - component: {fileID: 292442127}
+  - component: {fileID: 945433400504493110}
   - component: {fileID: 1810898386}
   - component: {fileID: 7454948327659538482}
   - component: {fileID: 4034690134458065288}
@@ -358,6 +359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa8bccef0bf7c2d46a856771a71395c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  carView: {fileID: 945433400504493110}
   seat: {fileID: 2768601474713517860}
   centerOfGravity: {fileID: 925994532353217594}
   maxEngineTorque: 100
@@ -417,13 +419,9 @@ MonoBehaviour:
   wheelDriveType: 3
   avgRpmInterpolationSteps: 3
   wheelCollider_FL: {fileID: 7400683588588862016}
-  wheelRenderer_FL: {fileID: 0}
   wheelCollider_FR: {fileID: 8691889316217842216}
-  wheelRenderer_FR: {fileID: 0}
   wheelCollider_RL: {fileID: 8043502671737049078}
-  wheelRenderer_RL: {fileID: 0}
   wheelCollider_RR: {fileID: 815017047007103368}
-  wheelRenderer_RR: {fileID: 0}
   engineAudioSource: {fileID: 0}
   engineStartSound: {fileID: 0}
   engineIdleSound: {fileID: 0}
@@ -431,6 +429,30 @@ MonoBehaviour:
   engineRpmDropSound: {fileID: 0}
   engineStopSound: {fileID: 0}
   maxSteerAngle: 40
+--- !u!114 &945433400504493110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621348858333486372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d852d281d1514144283243623ccccbe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frontSuspensionType: 1
+  rearSuspensionType: 0
+  wheelRenderer_FL: {fileID: 0}
+  wheelRenderer_FR: {fileID: 0}
+  wheelRenderer_RL: {fileID: 0}
+  wheelRenderer_RR: {fileID: 0}
+  doorViewDictionary:
+    pairs:
+    - Key: 0
+      Value: {fileID: 1874134481820397269}
+  leftDoorBone: {fileID: 5449283851001894884}
+  rightDoorBone: {fileID: 0}
 --- !u!54 &1810898386
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -587,8 +609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff4de730158a5614599cd63f58fee720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorBone: {fileID: 5449283851001894884}
-  Target: {fileID: 0}
+  maxAngle: 0
 --- !u!1 &3192996018423183657 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 900968490490959032, guid: 5100be51ad76f1d43a4a86f099e4511f, type: 3}
@@ -606,13 +627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff4de730158a5614599cd63f58fee720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorBone: {fileID: 4330222172261230637}
-  Target: {fileID: 0}
---- !u!4 &4330222172261230637 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2078170401211909564, guid: 5100be51ad76f1d43a4a86f099e4511f, type: 3}
-  m_PrefabInstance: {fileID: 2364159901930958225}
-  m_PrefabAsset: {fileID: 0}
+  maxAngle: 0
 --- !u!4 &5449283851001894884 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7732839086665022069, guid: 5100be51ad76f1d43a4a86f099e4511f, type: 3}

@@ -138219,36 +138219,29 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.53333336
-    functionName: StartGrabbingCarDoorToOpen
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
   - time: 0.96666664
-    functionName: GrabCarDoorToOpen
+    functionName: GrabDoor
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 1.6333333
-    functionName: UnGrabCarDoorToOpen
+    functionName: UnGrabDoor
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 3.7
-    functionName: GrabCarDoorToClose
+    functionName: GrabDoor
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 4.4
-    functionName: UnGrabCarDoorToClose
+  - time: 4.3
+    functionName: CloseDoor
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
