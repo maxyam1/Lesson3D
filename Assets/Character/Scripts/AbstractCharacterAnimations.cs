@@ -25,8 +25,8 @@ namespace Character.Scripts
         protected bool isGrounded;
 
         protected Transform weaponRotationPivot;
-        protected Transform leftHandTarget;
-        protected Transform rightHandTarget;
+        protected Transform weaponLeftHandTarget;
+        protected Transform weaponRightHandTarget;
         protected float leftHandWeight;
         protected float rightHandWeight;
         
@@ -82,11 +82,11 @@ namespace Character.Scripts
                 weaponRotationPivot.parent = animator.GetBoneTransform(HumanBodyBones.RightShoulder);
             }
 
-            if (rightHandTarget == null)
+            if (weaponRightHandTarget == null)
             {
-                rightHandTarget = new GameObject().transform;
-                rightHandTarget.name = "right hand target";
-                rightHandTarget.parent = weaponRotationPivot;   
+                weaponRightHandTarget = new GameObject().transform;
+                weaponRightHandTarget.name = "right hand target";
+                weaponRightHandTarget.parent = weaponRotationPivot;   
             }
         }
 
@@ -96,14 +96,14 @@ namespace Character.Scripts
             
             if (currentWeapon == null)
             {
-                leftHandTarget = null;
+                weaponLeftHandTarget = null;
             }
             else
             {
                 weaponRotationPivot.localPosition = currentWeapon.rotationPivotPos;
-                leftHandTarget = currentWeapon.leftHandTarget;
-                rightHandTarget.localPosition = currentWeapon.rightHandPos;
-                rightHandTarget.localRotation = Quaternion.Euler(currentWeapon.rightHandRot);   
+                weaponLeftHandTarget = currentWeapon.leftHandTarget;
+                weaponRightHandTarget.localPosition = currentWeapon.rightHandPos;
+                weaponRightHandTarget.localRotation = Quaternion.Euler(currentWeapon.rightHandRot);   
             }
         }
 
@@ -191,13 +191,16 @@ namespace Character.Scripts
         private void Update()
         {
             // Если делать это напрямую у рук появляется тряска и не точность
-            if (leftHandTarget)
+            if (weaponLeftHandTarget)
             {
-                leftHandTargetPos = leftHandTarget.position;
-                leftHandTargetRot = leftHandTarget.rotation;
+               // leftHandTargetPos = weaponLeftHandTarget.position;
+               // leftHandTargetRot = weaponLeftHandTarget.rotation;
+               // rightHandTargetPos = weaponRightHandTarget.position;
+               // rightHandTargetRot = weaponRightHandTarget.rotation;
 
-                rightHandTargetPos = rightHandTarget.position;
-                rightHandTargetRot = rightHandTarget.rotation;
+               Transform leftHand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
+               
+               leftHandTargetPos = new Vector3(weaponLeftHandTarget.lo leftHand.position.y)//////КОРОЧЕ НАДО ДЕЛАТЬ ТАК: АНИМАЦИЯ ДВЕРИ ЧЕРЕЗ CURVE, ЧЕРЕЗ IK КЛАСТЬ РУКУ НА РУЧКУ ДВЕРИ 
             }
         }
 
@@ -247,7 +250,7 @@ namespace Character.Scripts
 
             animator.SetLookAtPosition(targetLook.position);
             
-            if (leftHandTarget != null)
+            if (weaponLeftHandTarget != null)
             {
                 weaponRotationPivot.LookAt(targetLook);
                 
@@ -270,7 +273,7 @@ namespace Character.Scripts
         public void Reload()
         {
             isReloading = true;
-            leftHandTarget = currentWeapon.magHandTarget;
+            weaponLeftHandTarget = currentWeapon.magHandTarget;
             currentWeapon.StartReload();
             animator.SetTrigger(id_reload);
             
@@ -311,7 +314,7 @@ namespace Character.Scripts
         public void PullBolt()
         {
             currentWeapon.BoltPulled();
-            leftHandTarget = currentWeapon.leftHandTarget;
+            weaponLeftHandTarget = currentWeapon.leftHandTarget;
         }
 
         public void ReloadFinished()
@@ -369,6 +372,9 @@ namespace Character.Scripts
             
             door.SetDoorOpen();
             door.SetDoorFollowTarget(animator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal), handle);
+            
+            weaponLeftHandTarget = door.GetHandle(handle);
+            SetLeftHandWeight(1);
         }
 
         public void UnGrabDoor()
@@ -380,6 +386,8 @@ namespace Character.Scripts
             }
             
             door.SetDoorFollowTarget(null, null);
+            
+            SetLeftHandWeight(0);
         }
 
         public void CloseDoor()

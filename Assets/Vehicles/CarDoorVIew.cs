@@ -65,25 +65,17 @@ namespace Vehicles
         
         private IEnumerator DoorFollowTarget(Transform target, HandleType? handleType)
         {
+            Vector3 dirToHandle = Vector3.zero;
 
+            if (handleType.HasValue)
+            {
+                dirToHandle = GetHandle(handleType.Value)?.localPosition ?? Vector3.zero;
+            }
+
+            float angleToHandle = Mathf.Atan(dirToHandle.x / dirToHandle.y) * Mathf.Rad2Deg;
+            
             while (true)
             {
-                Vector3 dirToHandle = Vector3.zero;
-                
-                if (handleType.HasValue)
-                {
-                    if (handles.ContainsKey(handleType.Value))
-                    {
-                        dirToHandle = handles[handleType.Value].localPosition;
-                        //dirToHandle.y = 0;
-                    }
-                }
-
-                float angleToHandle = Mathf.Atan(dirToHandle.x / dirToHandle.y) * Mathf.Rad2Deg;
-                
-                
-                
-                
                 Vector3 targetPos = target.position;
                 
                 float distanceToPlane = Vector3.Dot(_car.up,targetPos  - transform.position);
@@ -103,7 +95,17 @@ namespace Vehicles
             Vector3 euler = transform.localRotation.eulerAngles;
             transform.localRotation = Quaternion.Euler(euler.x, Mathf.Clamp(euler.y, _minAngle, _minAngle + maxAngle), euler.z);
         }
-        
+
+        public Transform GetHandle(HandleType handleType)
+        {
+            if (handles.ContainsKey(handleType))
+            {
+                return handles[handleType];
+            }
+
+            return null;
+        }
+
 
         private enum DoorState
         {
